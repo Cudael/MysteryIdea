@@ -5,6 +5,7 @@ import prisma from "@/lib/prisma";
 import { stripe } from "@/lib/stripe";
 import { absoluteUrl } from "@/lib/utils";
 import { checkRateLimit } from "@/lib/rate-limit";
+import { logger } from "@/lib/logger";
 
 export async function createConnectAccount() {
   const { userId } = await auth();
@@ -78,7 +79,7 @@ export async function getConnectAccountStatus() {
       payoutsEnabled: account.payouts_enabled,
     };
   } catch (error) {
-    console.error("Failed to retrieve Stripe account:", error);
+    logger.error("Failed to retrieve Stripe account", error);
     return { connected: false, onboarded: false, accountId: user.stripeAccountId };
   }
 }
