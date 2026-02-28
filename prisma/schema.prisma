@@ -1,0 +1,81 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id               String     @id @default(cuid())
+  clerkId          String     @unique
+  email            String     @unique
+  name             String?
+  avatarUrl        String?
+  bio              String?
+  stripeAccountId  String?
+  stripeOnboarded  Boolean    @default(false)
+  role             Role       @default(USER)
+  ideas            Idea[]     @relation("CreatorIdeas")
+  purchases        Purchase[]
+  createdAt        DateTime   @default(now())
+  updatedAt        DateTime   @updatedAt
+}
+
+enum Role {
+  USER
+  CREATOR
+  ADMIN
+}
+
+model Idea {
+  id             String     @id @default(cuid())
+  title          String
+  teaserText     String?
+  teaserImageUrl String?
+  hiddenContent  String
+  priceInCents   Int
+  currency       String     @default("usd")
+  unlockType     UnlockType @default(MULTI)
+  maxUnlocks     Int?
+  category       String?
+  tags           String[]   @default([])
+  published      Boolean    @default(false)
+  creator        User       @relation("CreatorIdeas", fields: [creatorId], references: [id])
+  creatorId      String
+  purchases      Purchase[]
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @updatedAt
+
+  @@index([creatorId])
+  @@index([published, createdAt])
+}
+
+enum UnlockType {
+  EXCLUSIVE
+  MULTI
+}
+
+model Purchase {
+  id                    String         @id @default(cuid())
+  buyer                 User           @relation(fields: [buyerId], references: [id])
+  buyerId               String
+  idea                  Idea           @relation(fields: [ideaId], references: [id])
+  ideaId                String
+  amountInCents         Int
+  platformFeeInCents    Int
+  stripePaymentIntentId String         @unique
+  status                PurchaseStatus @default(PENDING)
+  createdAt             DateTime       @default(now())
+
+  @@unique([buyerId, ideaId])
+  @@index([ideaId])
+}
+
+enum PurchaseStatus {
+  PENDING
+  COMPLETED
+  REFUNDED
+  FAILED
+}
