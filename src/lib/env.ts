@@ -2,7 +2,8 @@ import { z } from "zod";
 
 const envSchema = z.object({
   DATABASE_URL: z.string().min(1, "DATABASE_URL is required"),
-  NEXT_PUBLIC_APP_URL: z.string().url("NEXT_PUBLIC_APP_URL must be a valid URL"),
+  DIRECT_URL: z.string().optional(),
+  NEXT_PUBLIC_APP_URL: z.string().url("NEXT_PUBLIC_APP_URL must be a valid URL").optional(),
   NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: z
     .string()
     .startsWith("pk_", "Invalid Clerk publishable key"),
@@ -18,6 +19,10 @@ const envSchema = z.object({
   UPLOADTHING_TOKEN: z.string().min(1, "UPLOADTHING_TOKEN is required"),
   RESEND_API_KEY: z.string().optional(),
   RESEND_FROM_EMAIL: z.string().optional(),
+  // Sentry (optional)
+  NEXT_PUBLIC_SENTRY_DSN: z.string().url().optional(),
+  SENTRY_ORG: z.string().optional(),
+  SENTRY_PROJECT: z.string().optional(),
 });
 
 export type Env = z.infer<typeof envSchema>;
