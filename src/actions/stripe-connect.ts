@@ -74,7 +74,8 @@ export async function getConnectAccountStatus() {
       chargesEnabled: account.charges_enabled,
       payoutsEnabled: account.payouts_enabled,
     };
-  } catch {
+  } catch (error) {
+    console.error("Failed to retrieve Stripe account:", error);
     return { connected: false, onboarded: false, accountId: user.stripeAccountId };
   }
 }

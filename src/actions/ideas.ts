@@ -23,7 +23,7 @@ export async function createIdea(input: z.infer<typeof createIdeaSchema>) {
 
   const user = await prisma.user.findUnique({ where: { clerkId: userId } });
   if (!user) throw new Error("User not found");
-  if (!user.stripeOnboarded) throw new Error("Must complete Stripe onboarding first");
+  if (!user.stripeOnboarded) throw new Error("Please connect and complete your Stripe account setup before creating ideas. Visit /creator/connect to get started.");
 
   const validated = createIdeaSchema.parse(input);
 
