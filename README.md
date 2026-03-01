@@ -7,7 +7,7 @@
 ## Features
 
 - 🔐 **Hidden Ideas** — Post exclusive or multi-unlock ideas behind a paywall
-- 💰 **Creator Monetization** — Set your own price; earn directly via Stripe Connect
+- 💰 **Creator Monetization** — Set your own price; earn to your wallet, withdraw anytime
 - 🎭 **Teasers** — Add text/image teasers to spark buyer curiosity
 - 🛒 **Instant Unlock** — Buyers unlock ideas instantly after payment
 - 📊 **Creator Dashboard** — Track earnings, manage ideas, and monitor unlocks

@@ -5,15 +5,14 @@ import {
   TrendingUp,
   DollarSign,
   Lightbulb,
-  AlertCircle,
-  CheckCircle,
+  Wallet2,
   Pencil,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { DeleteIdeaDialog } from "@/components/delete-idea-dialog";
 import { getIdeasByCreator } from "@/actions/ideas";
-import { getConnectAccountStatus } from "@/actions/stripe-connect";
+import { getWalletWithTransactions } from "@/actions/wallet";
 import { formatPrice } from "@/lib/utils";
 
 export const metadata: Metadata = {
@@ -21,9 +20,9 @@ export const metadata: Metadata = {
 };
 
 export default async function CreatorPage() {
-  const [ideas, connectStatus] = await Promise.all([
+  const [ideas, { wallet }] = await Promise.all([
     getIdeasByCreator(),
-    getConnectAccountStatus(),
+    getWalletWithTransactions(0),
   ]);
 
   const totalRevenue = ideas.reduce((sum, idea) => {
@@ -55,45 +54,24 @@ export default async function CreatorPage() {
         </Button>
       </div>
 
-      {/* Stripe Connect Banner */}
-      {!connectStatus.connected ? (
-        <div className="mt-6 flex items-center gap-4 rounded-xl border border-yellow-500/30 bg-yellow-500/10 p-4">
-          <AlertCircle className="h-5 w-5 shrink-0 text-yellow-500" />
-          <div className="flex-1">
-            <p className="text-sm font-medium text-foreground">
-              Connect Stripe to start earning
-            </p>
-            <p className="text-sm text-muted-foreground">
-              You need to connect a Stripe account before you can publish ideas.
-            </p>
-          </div>
-          <Button asChild size="sm" variant="outline">
-            <Link href="/creator/connect">Connect Stripe</Link>
-          </Button>
-        </div>
-      ) : !connectStatus.onboarded ? (
-        <div className="mt-6 flex items-center gap-4 rounded-xl border border-yellow-500/30 bg-yellow-500/10 p-4">
-          <AlertCircle className="h-5 w-5 shrink-0 text-yellow-500" />
-          <div className="flex-1">
-            <p className="text-sm font-medium text-foreground">
-              Complete Stripe onboarding
-            </p>
-            <p className="text-sm text-muted-foreground">
-              Finish setting up your Stripe account to receive payments.
-            </p>
-          </div>
-          <Button asChild size="sm" variant="outline">
-            <Link href="/creator/connect">Complete Setup</Link>
-          </Button>
-        </div>
-      ) : (
-        <div className="mt-6 flex items-center gap-3 rounded-xl border border-green-500/30 bg-green-500/10 p-4">
-          <CheckCircle className="h-5 w-5 shrink-0 text-green-500" />
+      {/* Wallet summary */}
+      <div className="mt-6 flex items-center gap-4 rounded-xl border border-primary/20 bg-primary/5 p-4">
+        <Wallet2 className="h-5 w-5 shrink-0 text-primary" />
+        <div className="flex-1">
           <p className="text-sm font-medium text-foreground">
-            Stripe account connected and ready to receive payments
+            Wallet Balance:{" "}
+            <span className="text-primary">
+              {formatPrice(wallet.balanceInCents)}
+            </span>
+          </p>
+          <p className="text-sm text-muted-foreground">
+            Total earned: {formatPrice(wallet.totalEarnedInCents)}
           </p>
         </div>
-      )}
+        <Button asChild size="sm" variant="outline">
+          <Link href="/creator/wallet">View Wallet</Link>
+        </Button>
+      </div>
 
       {/* Stats */}
       <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-3">

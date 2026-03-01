@@ -63,7 +63,7 @@ export default function AboutPage() {
                 Secure Payments
               </h3>
               <p className="mt-2 text-sm text-muted-foreground">
-                Stripe Connect handles all payments with a 15% platform fee.
+                Stripe handles all payments securely. Creators earn to their wallet with a 15% platform fee.
               </p>
             </div>
           </div>

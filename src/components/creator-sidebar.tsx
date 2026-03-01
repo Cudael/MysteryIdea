@@ -9,11 +9,13 @@ import {
   CreditCard,
   Settings,
   BarChart3,
+  Wallet2,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const NAV_LINKS = [
   { href: "/creator", label: "Dashboard", icon: LayoutDashboard, exact: true },
+  { href: "/creator/wallet", label: "Wallet", icon: Wallet2, exact: false },
   { href: "/creator/ideas/new", label: "Create Idea", icon: PlusCircle, exact: true },
   { href: "/creator/analytics", label: "Analytics", icon: BarChart3, exact: false },
   { href: "/creator/connect", label: "Stripe Connect", icon: CreditCard, exact: false },

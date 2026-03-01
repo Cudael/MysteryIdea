@@ -37,9 +37,9 @@ export function PayoutInfo({ connected, onboarded }: PayoutInfoProps) {
       </CardHeader>
       <CardContent className="space-y-4">
         <p className="text-sm text-muted-foreground">
-          Payouts are managed directly by Stripe. When a sale is completed, your
-          earnings (minus the platform fee) are transferred to your Stripe
-          Express account and paid out on Stripe&apos;s standard schedule.
+          When a sale is completed, your earnings (minus the platform fee) are
+          credited to your in-app wallet. You can withdraw your balance to your
+          bank account at any time once you have connected your Stripe account.
         </p>
         {connected && onboarded ? (
           <Button onClick={handleViewDashboard} disabled={loading} className="gap-2">

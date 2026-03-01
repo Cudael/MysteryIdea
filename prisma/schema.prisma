@@ -21,6 +21,7 @@ model User {
   purchases        Purchase[]
   reviews          Review[]   @relation("BuyerReviews")
   reports          Report[]   @relation("ReporterReports")
+  wallet           Wallet?
   createdAt        DateTime   @default(now())
   updatedAt        DateTime   @updatedAt
 }
@@ -145,4 +146,59 @@ enum RefundRequestStatus {
   PENDING
   APPROVED
   DENIED
+}
+
+model Wallet {
+  id                    String              @id @default(cuid())
+  user                  User                @relation(fields: [userId], references: [id])
+  userId                String              @unique
+  balanceInCents        Int                 @default(0)
+  totalEarnedInCents    Int                 @default(0)
+  totalWithdrawnInCents Int                 @default(0)
+  transactions          WalletTransaction[]
+  withdrawals           WithdrawalRequest[]
+  createdAt             DateTime            @default(now())
+  updatedAt             DateTime            @updatedAt
+}
+
+model WalletTransaction {
+  id            String                @id @default(cuid())
+  wallet        Wallet                @relation(fields: [walletId], references: [id])
+  walletId      String
+  type          WalletTransactionType
+  amountInCents Int
+  description   String
+  referenceId   String?
+  createdAt     DateTime              @default(now())
+
+  @@index([walletId])
+  @@index([createdAt])
+}
+
+enum WalletTransactionType {
+  EARNING
+  WITHDRAWAL
+  REFUND_DEBIT
+}
+
+model WithdrawalRequest {
+  id             String           @id @default(cuid())
+  wallet         Wallet           @relation(fields: [walletId], references: [id])
+  walletId       String
+  amountInCents  Int
+  status         WithdrawalStatus @default(PENDING)
+  stripePayoutId String?
+  processedAt    DateTime?
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+
+  @@index([walletId])
+  @@index([status])
+}
+
+enum WithdrawalStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
 }

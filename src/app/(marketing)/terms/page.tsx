@@ -25,12 +25,11 @@ export default function TermsPage() {
           <h2 className="text-2xl font-semibold text-foreground">
             1. Platform Description
           </h2>
-          <p className="mt-3 text-muted-foreground leading-relaxed">
+        <p className="mt-3 text-muted-foreground leading-relaxed">
             MysteryIdea is a premium marketplace that allows creators to list
             hidden ideas with teaser text and buyers to unlock those ideas upon
-            payment. All transactions are processed via Stripe Connect. The
-            platform charges a service fee on each transaction as disclosed at
-            checkout.
+            payment. All transactions are processed via Stripe. The platform
+            charges a service fee on each transaction as disclosed at checkout.
           </p>
         </section>
 
@@ -73,8 +72,7 @@ export default function TermsPage() {
               content must match what was teased
             </li>
             <li>
-              Maintain a connected and onboarded Stripe Express account to
-              receive payouts
+              Connect your Stripe account to withdraw earnings from your wallet to your bank account
             </li>
           </ul>
         </section>
@@ -108,11 +106,12 @@ export default function TermsPage() {
           <h2 className="text-2xl font-semibold text-foreground">
             5. Payment Terms
           </h2>
-          <p className="mt-3 text-muted-foreground leading-relaxed">
-            All payments are processed securely through Stripe Connect. Prices
-            are set by creators and displayed in USD. MysteryIdea charges a
-            platform fee (currently 15%) on each transaction; the remainder is
-            transferred to the creator&apos;s Stripe Express account.
+        <p className="mt-3 text-muted-foreground leading-relaxed">
+            All payments are processed securely through Stripe. Prices are set
+            by creators and displayed in USD. MysteryIdea charges a platform fee
+            (currently 15%) on each transaction; the remainder is credited to
+            the creator&apos;s in-app wallet. Creators can withdraw their wallet
+            balance to their bank account at any time via Stripe.
           </p>
           <p className="mt-3 text-muted-foreground leading-relaxed">
             Refunds are handled on a case-by-case basis. Buyers may submit a
