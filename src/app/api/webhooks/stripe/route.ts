@@ -48,7 +48,7 @@ export async function POST(req: Request) {
           data: { status: "COMPLETED" },
         });
 
-        // Send emails
+        // Credit creator wallet and send emails
         try {
           const purchase = await prisma.purchase.findFirst({
             where: { stripePaymentIntentId: paymentIntentId },
@@ -59,6 +59,33 @@ export async function POST(req: Request) {
           });
 
           if (purchase) {
+            const netEarnings = purchase.amountInCents - purchase.platformFeeInCents;
+
+            const wallet = await prisma.wallet.upsert({
+              where: { userId: purchase.idea.creatorId },
+              create: { userId: purchase.idea.creatorId },
+              update: {},
+            });
+
+            await prisma.$transaction([
+              prisma.wallet.update({
+                where: { id: wallet.id },
+                data: {
+                  balanceInCents: { increment: netEarnings },
+                  totalEarnedInCents: { increment: netEarnings },
+                },
+              }),
+              prisma.walletTransaction.create({
+                data: {
+                  walletId: wallet.id,
+                  type: "EARNING",
+                  amountInCents: netEarnings,
+                  description: `Sale: ${purchase.idea.title}`,
+                  referenceId: purchase.id,
+                },
+              }),
+            ]);
+
             await sendPurchaseConfirmationEmail(
               purchase.buyer.email,
               purchase.idea.title,
@@ -75,7 +102,7 @@ export async function POST(req: Request) {
             );
           }
         } catch (emailErr) {
-          console.error("[stripe-webhook] Email send failed:", emailErr);
+          console.error("[stripe-webhook] Post-purchase processing failed:", emailErr);
         }
       }
       break;
@@ -84,10 +111,39 @@ export async function POST(req: Request) {
     case "charge.refunded": {
       const charge = event.data.object;
       if (charge.payment_intent) {
+        const purchase = await prisma.purchase.findFirst({
+          where: { stripePaymentIntentId: charge.payment_intent as string },
+          include: { idea: true },
+        });
+
         await prisma.purchase.updateMany({
           where: { stripePaymentIntentId: charge.payment_intent as string },
           data: { status: "REFUNDED" },
         });
+
+        if (purchase) {
+          const netEarnings = purchase.amountInCents - purchase.platformFeeInCents;
+          const wallet = await prisma.wallet.findUnique({
+            where: { userId: purchase.idea.creatorId },
+          });
+          if (wallet && wallet.balanceInCents >= netEarnings) {
+            await prisma.$transaction([
+              prisma.wallet.update({
+                where: { id: wallet.id },
+                data: { balanceInCents: { decrement: netEarnings } },
+              }),
+              prisma.walletTransaction.create({
+                data: {
+                  walletId: wallet.id,
+                  type: "REFUND_DEBIT",
+                  amountInCents: netEarnings,
+                  description: `Refund: ${purchase.idea.title}`,
+                  referenceId: purchase.id,
+                },
+              }),
+            ]);
+          }
+        }
       }
       break;
     }

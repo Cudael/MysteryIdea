@@ -17,15 +17,10 @@ export async function createCheckoutSession(ideaId: string) {
 
   const idea = await prisma.idea.findUnique({
     where: { id: ideaId, published: true },
-    include: { creator: true },
   });
   if (!idea) throw new Error("Idea not found");
 
   if (idea.creatorId === user.id) throw new Error("Cannot buy your own idea");
-
-  if (!idea.creator.stripeAccountId || !idea.creator.stripeOnboarded) {
-    throw new Error("Creator payment account not set up");
-  }
 
   // Check if already purchased
   const existingPurchase = await prisma.purchase.findUnique({
@@ -69,12 +64,6 @@ export async function createCheckoutSession(ideaId: string) {
       buyerId: user.id,
       amountInCents: idea.priceInCents.toString(),
       platformFeeInCents: platformFeeAmount.toString(),
-    },
-    payment_intent_data: {
-      application_fee_amount: platformFeeAmount,
-      transfer_data: {
-        destination: idea.creator.stripeAccountId,
-      },
     },
   });
 

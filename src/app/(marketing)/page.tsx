@@ -63,7 +63,7 @@ const HOW_IT_WORKS = [
     step: "03",
     title: "Profit",
     description:
-      "Buyers unlock your idea instantly. Revenue is split automatically via Stripe Connect.",
+      "Buyers unlock your idea instantly. Earnings are added to your wallet instantly. Withdraw anytime.",
   },
 ];
 
