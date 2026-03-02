@@ -1,60 +1,60 @@
 import Link from "next/link";
-import { Lightbulb } from "lucide-react";
+import { Sparkles } from "lucide-react";
 
 export function Footer() {
   return (
-    <footer className="mt-auto bg-white relative">
-      <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-primary via-purple-500 to-pink-500"></div>
-      <div className="container mx-auto px-4 py-16 sm:px-6 lg:px-8">
+    <footer className="border-t border-[#D9DCE3] bg-[#FFFFFF] mt-auto">
+      <div className="container mx-auto px-6 py-16 lg:px-8">
         <div className="grid grid-cols-1 gap-12 md:grid-cols-4 lg:gap-8">
           <div className="col-span-1 md:col-span-1">
             <Link href="/" className="flex items-center gap-2">
-              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-white">
-                <Lightbulb className="h-5 w-5" />
+              <div className="flex h-6 w-6 items-center justify-center rounded-[6px] bg-[#3A5FCD]">
+                <Sparkles className="h-3 w-3 text-[#E8C26A]" />
               </div>
-              <span className="text-xl font-extrabold tracking-tight text-foreground">MysteryIdea</span>
+              <span className="text-[16px] font-bold tracking-tight text-[#1A1A1A]">
+                MysteryMarket
+              </span>
             </Link>
-            <p className="mt-5 text-sm leading-relaxed text-muted-foreground font-medium">
-              The premium marketplace for hidden ideas. Post, price, and profit from your best thinking, instantly.
+            <p className="mt-4 text-[15px] leading-[1.6] text-[#1A1A1A]/70">
+              The professional marketplace for high-value hidden ideas and insights.
             </p>
           </div>
 
           <div>
-            <h3 className="mb-5 text-sm font-extrabold uppercase tracking-wider text-slate-900">
+            <h3 className="mb-4 text-[14px] font-semibold text-[#1A1A1A]">
               Platform
             </h3>
-            <ul className="space-y-4">
-              <li><Link href="/ideas" className="text-sm font-medium text-slate-500 transition-colors hover:text-primary">Browse Marketplace</Link></li>
-              <li><Link href="/creator" className="text-sm font-medium text-slate-500 transition-colors hover:text-primary">Creator Studio</Link></li>
-              <li><Link href="/dashboard" className="text-sm font-medium text-slate-500 transition-colors hover:text-primary">Dashboard</Link></li>
+            <ul className="space-y-3">
+              <li><Link href="/ideas" className="text-[15px] text-[#1A1A1A]/70 transition-colors hover:text-[#3A5FCD]">Browse</Link></li>
+              <li><Link href="/creator" className="text-[15px] text-[#1A1A1A]/70 transition-colors hover:text-[#3A5FCD]">Creator Studio</Link></li>
+              <li><Link href="/dashboard" className="text-[15px] text-[#1A1A1A]/70 transition-colors hover:text-[#3A5FCD]">Dashboard</Link></li>
             </ul>
           </div>
 
           <div>
-            <h3 className="mb-5 text-sm font-extrabold uppercase tracking-wider text-slate-900">
+            <h3 className="mb-4 text-[14px] font-semibold text-[#1A1A1A]">
               Company
             </h3>
-            <ul className="space-y-4">
-              <li><Link href="/about" className="text-sm font-medium text-slate-500 transition-colors hover:text-primary">About Us</Link></li>
-              <li><Link href="/blog" className="text-sm font-medium text-slate-500 transition-colors hover:text-primary">Insights Blog</Link></li>
-              <li><Link href="/contact" className="text-sm font-medium text-slate-500 transition-colors hover:text-primary">Contact Support</Link></li>
+            <ul className="space-y-3">
+              <li><Link href="/about" className="text-[15px] text-[#1A1A1A]/70 transition-colors hover:text-[#3A5FCD]">About</Link></li>
+              <li><Link href="/contact" className="text-[15px] text-[#1A1A1A]/70 transition-colors hover:text-[#3A5FCD]">Contact</Link></li>
             </ul>
           </div>
 
           <div>
-            <h3 className="mb-5 text-sm font-extrabold uppercase tracking-wider text-slate-900">
+            <h3 className="mb-4 text-[14px] font-semibold text-[#1A1A1A]">
               Legal
             </h3>
-            <ul className="space-y-4">
-              <li><Link href="/privacy" className="text-sm font-medium text-slate-500 transition-colors hover:text-primary">Privacy Policy</Link></li>
-              <li><Link href="/terms" className="text-sm font-medium text-slate-500 transition-colors hover:text-primary">Terms of Service</Link></li>
+            <ul className="space-y-3">
+              <li><Link href="/privacy" className="text-[15px] text-[#1A1A1A]/70 transition-colors hover:text-[#3A5FCD]">Privacy Policy</Link></li>
+              <li><Link href="/terms" className="text-[15px] text-[#1A1A1A]/70 transition-colors hover:text-[#3A5FCD]">Terms of Service</Link></li>
             </ul>
           </div>
         </div>
 
-        <div className="mt-16 border-t border-slate-100 pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
-          <p className="text-sm font-medium text-slate-400">
-            © {new Date().getFullYear()} MysteryMarket Inc. All rights reserved.
+        <div className="mt-16 border-t border-[#D9DCE3] pt-8">
+          <p className="text-[14px] text-[#1A1A1A]/60">
+            © {new Date().getFullYear()} MysteryMarket. All rights reserved.
           </p>
         </div>
       </div>
