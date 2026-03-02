@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { Lock, Users, Sparkles } from "lucide-react";
+import { Lock, Users } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { formatPrice } from "@/lib/utils";
@@ -18,110 +18,112 @@ export function IdeaCard({
   category,
   creatorId,
   creatorName,
+  creatorAvatarUrl,
   purchaseCount,
   isOwner = false,
   isPurchased = false,
 }: IdeaCardProps) {
   return (
-    <div className="group relative flex flex-col overflow-hidden rounded-2xl border border-border/60 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1.5 hover:shadow-xl hover:shadow-primary/10 hover:border-primary/30">
+    <div className="group flex flex-col overflow-hidden rounded-[12px] border border-[#D9DCE3] bg-[#FFFFFF] shadow-[0_4px_14px_rgba(0,0,0,0.04)] transition-all duration-200 hover:-translate-y-[2px] hover:shadow-[0_8px_24px_rgba(0,0,0,0.08)] hover:border-[#6D7BE0]/40">
       
-      {/* Decorative top color bar */}
-      <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-primary to-purple-500 z-20 opacity-0 transition-opacity group-hover:opacity-100" />
-
-      {/* Image / Vibrant Placeholder */}
-      <div className="relative h-48 w-full overflow-hidden border-b border-border/50">
+      {/* Image / Subtle Placeholder */}
+      <div className="relative h-48 w-full overflow-hidden border-b border-[#D9DCE3] bg-[#F5F6FA]">
         {teaserImageUrl ? (
           <Image
             src={teaserImageUrl}
             alt={title}
             fill
-            className="object-cover transition-transform duration-700 group-hover:scale-110"
+            className="object-cover transition-transform duration-500 group-hover:scale-[1.03]"
           />
         ) : (
-          <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-indigo-500/10 via-purple-500/10 to-pink-500/10">
-            <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]"></div>
-            <Sparkles className="h-10 w-10 text-primary/40 relative z-10 transition-transform duration-500 group-hover:scale-125 group-hover:text-primary" />
-          </div>
-        )}
-
-        {/* Lock overlay backdrop with creative styling */}
-        {!isPurchased && !isOwner && (
-          <div className="absolute inset-0 z-10 flex items-center justify-center bg-slate-900/10 backdrop-blur-[2px] transition-all duration-300 group-hover:backdrop-blur-0 group-hover:bg-transparent">
-            <div className="rounded-full border border-white/20 bg-black/60 p-3.5 shadow-2xl backdrop-blur-md text-white transition-transform duration-300 group-hover:scale-110">
-              <Lock className="h-5 w-5" />
-            </div>
+          <div className="flex h-full w-full items-center justify-center">
+            {/* Minimalist icon for missing images */}
+            <Lock className="h-8 w-8 text-[#D9DCE3]" />
           </div>
         )}
 
         {/* Category badge */}
         {category && (
           <div className="absolute left-4 top-4 z-20">
-            <Badge variant="secondary" className="bg-white/90 text-slate-800 font-bold shadow-sm backdrop-blur-md hover:bg-white border-0">
+            <span className="inline-flex items-center rounded-[6px] bg-[#FFFFFF] px-2.5 py-1 text-xs font-medium text-[#1A1A1A] shadow-[0_2px_4px_rgba(0,0,0,0.04)] border border-[#D9DCE3]">
               {category}
-            </Badge>
+            </span>
           </div>
         )}
       </div>
 
       <div className="flex flex-1 flex-col p-6">
-        <h3 className="line-clamp-2 text-xl font-bold tracking-tight text-foreground group-hover:text-primary transition-colors">
+        <h3 className="line-clamp-2 text-[18px] font-bold tracking-tight text-[#1A1A1A]">
           {title}
         </h3>
 
         {teaserText && (
-          <p className="mt-3 line-clamp-2 text-sm leading-relaxed text-muted-foreground">
+          <p className="mt-3 line-clamp-2 text-[16px] leading-[1.6] text-[#1A1A1A]/70">
             {teaserText}
           </p>
         )}
 
         <div className="mt-5 flex items-center gap-3">
-          <Badge
-            variant={unlockType === "EXCLUSIVE" ? "default" : "secondary"}
-            className="rounded-md px-2.5 py-1 text-xs font-semibold uppercase tracking-wider bg-primary/10 text-primary hover:bg-primary/20 border-0"
+          <span
+            className={`inline-flex items-center rounded-[6px] px-2.5 py-1 text-xs font-medium border ${
+              unlockType === "EXCLUSIVE"
+                ? "bg-[#E8C26A]/10 text-[#1A1A1A] border-[#E8C26A]/30"
+                : "bg-[#F5F6FA] text-[#1A1A1A] border-[#D9DCE3]"
+            }`}
           >
             {unlockType === "EXCLUSIVE" ? "Exclusive" : "Multi-unlock"}
-          </Badge>
+          </span>
           {purchaseCount !== undefined && purchaseCount > 0 && (
-            <span className="flex items-center gap-1.5 text-xs font-bold text-slate-500">
-              <Users className="h-4 w-4 text-slate-400" />
-              {purchaseCount}
+            <span className="flex items-center gap-1.5 text-xs font-medium text-[#1A1A1A]/60">
+              <Users className="h-3.5 w-3.5" />
+              {purchaseCount} unlocked
             </span>
           )}
         </div>
 
-        <div className="mt-6 flex items-center justify-between border-t border-border/50 pt-5">
+        <div className="mt-6 flex items-center justify-between border-t border-[#D9DCE3] pt-5">
           <div className="flex flex-col">
-            <span className="text-2xl font-black text-foreground">
+            <span className="text-[20px] font-bold text-[#1A1A1A]">
               {formatPrice(priceInCents)}
             </span>
             {creatorName && (
-              <span className="text-sm text-muted-foreground mt-0.5">
-                by{" "}
+              <div className="mt-1 flex items-center gap-2">
+                {creatorAvatarUrl ? (
+                  <Image 
+                    src={creatorAvatarUrl} 
+                    alt={creatorName} 
+                    width={18} 
+                    height={18} 
+                    className="rounded-full border border-[#D9DCE3]"
+                  />
+                ) : (
+                  <div className="h-[18px] w-[18px] rounded-full bg-[#D9DCE3]" />
+                )}
                 {creatorId ? (
                   <Link
                     href={`/creators/${creatorId}`}
-                    className="font-bold text-foreground hover:text-primary transition-colors"
+                    className="text-sm font-medium text-[#1A1A1A]/70 hover:text-[#3A5FCD] transition-colors"
                     onClick={(e) => e.stopPropagation()}
                   >
                     {creatorName}
                   </Link>
                 ) : (
-                  creatorName
+                  <span className="text-sm text-[#1A1A1A]/70">{creatorName}</span>
                 )}
-              </span>
+              </div>
             )}
           </div>
 
           {isOwner ? (
-            <Button asChild variant="outline" className="rounded-full px-6 font-bold border-slate-300">
+            <Button asChild variant="outline" size="sm" className="h-9 px-4">
               <Link href={`/creator/ideas/${id}/edit`}>Edit</Link>
             </Button>
           ) : isPurchased ? (
-            <Button asChild variant="secondary" className="rounded-full px-6 font-bold bg-primary/10 text-primary hover:bg-primary/20">
+            <Button asChild variant="secondary" size="sm" className="h-9 px-4">
               <Link href={`/ideas/${id}`}>Read Now</Link>
             </Button>
           ) : (
-            <Button asChild className="rounded-full px-6 font-bold shadow-md shadow-primary/20 hover:shadow-lg hover:shadow-primary/30 transition-all gap-2">
+            <Button asChild size="sm" className="h-9 px-4 gap-1.5">
               <Link href={`/ideas/${id}`}>
                 <Lock className="h-3.5 w-3.5" />
                 Unlock
