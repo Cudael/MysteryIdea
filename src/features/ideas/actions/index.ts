@@ -17,6 +17,10 @@ export async function createIdea(input: z.infer<typeof createIdeaSchema>) {
   const user = await prisma.user.findUnique({ where: { clerkId: userId } });
   if (!user) throw new Error("User not found");
 
+  if (!user.stripeAccountId || !user.stripeOnboarded) {
+    throw new Error("STRIPE_NOT_CONNECTED");
+  }
+
   const validated = createIdeaSchema.parse(input);
 
   const sanitized = {

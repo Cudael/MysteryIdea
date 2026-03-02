@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { z } from "zod";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -101,6 +102,15 @@ export function IdeaForm({
         const msg = err.errors[0]?.message ?? "Validation error";
         setError(msg);
         toast.error(msg);
+      } else if (err instanceof Error && err.message === "STRIPE_NOT_CONNECTED") {
+        const msg = "Please connect your Stripe account before creating ideas.";
+        setError(msg);
+        toast.error(msg, {
+          action: {
+            label: "Connect Stripe",
+            onClick: () => router.push("/creator/connect"),
+          },
+        });
       } else if (err instanceof Error) {
         setError(err.message);
         toast.error(err.message);
@@ -113,13 +123,22 @@ export function IdeaForm({
     }
   }
 
+  const isStripeError = error === "Please connect your Stripe account before creating ideas.";
+
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
-      {error && (
+      {isStripeError ? (
+        <div className="rounded-lg border border-yellow-400/50 bg-yellow-50 p-4 text-sm text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-400">
+          {error}{" "}
+          <Link href="/creator/connect" className="font-medium underline">
+            Set up Stripe Connect →
+          </Link>
+        </div>
+      ) : error ? (
         <div className="rounded-lg border border-destructive/50 bg-destructive/10 p-4 text-sm text-destructive">
           {error}
         </div>
-      )}
+      ) : null}
 
       <div className="space-y-2">
         <Label htmlFor="title">Title *</Label>

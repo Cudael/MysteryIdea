@@ -84,7 +84,12 @@ export function UnlockButton({
         window.location.href = result.url;
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Something went wrong");
+      const msg = err instanceof Error ? err.message : "Something went wrong";
+      setError(
+        msg.toLowerCase().includes("payment account")
+          ? "This creator hasn't set up payments yet. Please try again later."
+          : msg
+      );
       setLoading(null);
     }
   }
@@ -96,7 +101,12 @@ export function UnlockButton({
       await purchaseWithWallet(ideaId);
       window.location.reload();
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Something went wrong");
+      const msg = err instanceof Error ? err.message : "Something went wrong";
+      setError(
+        msg.toLowerCase().includes("payment account")
+          ? "This creator hasn't set up payments yet. Please try again later."
+          : msg
+      );
       setLoading(null);
     }
   }
