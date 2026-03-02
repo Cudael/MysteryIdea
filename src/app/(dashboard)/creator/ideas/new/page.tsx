@@ -5,7 +5,7 @@ import { IdeaForm } from "@/features/ideas/components/idea-form";
 import { createIdea } from "@/features/ideas/actions";
 
 export const metadata: Metadata = {
-  title: "Create Idea - MysteryIdea",
+  title: "Create Idea - MysteryMarket",
 };
 
 export default async function NewIdeaPage() {
@@ -13,13 +13,15 @@ export default async function NewIdeaPage() {
   if (!userId) redirect("/sign-in");
 
   return (
-    <div className="mx-auto max-w-2xl">
-      <h1 className="text-2xl font-bold text-foreground">Create New Idea</h1>
-      <p className="mt-2 text-muted-foreground">
-        Share your hidden insight with the world — on your terms.
-      </p>
+    <div className="mx-auto max-w-3xl">
+      <div className="mb-8 border-b border-[#D9DCE3] pb-6">
+        <h1 className="text-3xl font-bold tracking-tight text-[#1A1A1A]">Create New Idea</h1>
+        <p className="mt-2 text-[16px] leading-[1.6] text-[#1A1A1A]/70">
+          Draft your insight, set your terms, and prepare to monetize your expertise.
+        </p>
+      </div>
 
-      <div className="mt-8">
+      <div className="rounded-[12px] border border-[#D9DCE3] bg-[#FFFFFF] p-6 sm:p-8 shadow-[0_4px_14px_rgba(0,0,0,0.02)]">
         <IdeaForm onSubmit={createIdea} />
       </div>
     </div>
