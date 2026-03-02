@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight, Lock, DollarSign, Zap, ShieldCheck } from "lucide-react";
+import { ArrowRight, Lock, DollarSign, Wallet, ShieldCheck } from "lucide-react";
 import { Hero } from "@/components/hero";
 import { IdeaCard } from "@/components/idea-card";
 import { Button } from "@/components/ui/button";
@@ -9,17 +9,17 @@ const HOW_IT_WORKS = [
   {
     icon: Lock,
     title: "Draft your insight",
-    description: "Write your hidden idea, add a compelling teaser, and set your own price.",
+    description: "Write your hidden idea, craft a compelling teaser, and choose your price point.",
   },
   {
     icon: DollarSign,
     title: "Set your terms",
-    description: "Choose an exclusive (single buyer) or a multi-unlock pricing model.",
+    description: "Opt for an exclusive single-buyer model or allow multiple unlocks.",
   },
   {
-    icon: Zap,
+    icon: Wallet,
     title: "Earn instantly",
-    description: "Buyers unlock your content. Earnings flow directly to your Stripe wallet.",
+    description: "Earnings are processed instantly and sent directly to your Stripe account.",
   },
 ];
 
@@ -38,31 +38,30 @@ export default async function HomePage() {
     <>
       <Hero />
 
-      {/* Featured Ideas - Added a soft colored background & section tag */}
-      <section className="relative py-24 bg-slate-50 border-y border-border">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="mb-12 flex flex-col md:flex-row md:items-end md:justify-between gap-6">
-            <div className="max-w-xl">
-              <span className="text-primary font-bold tracking-wider text-sm uppercase mb-2 block">Top Marketplace Picks</span>
-              <h2 className="text-3xl font-extrabold tracking-tight text-foreground sm:text-4xl">
+      {/* Featured Ideas - Pure White Background */}
+      <section className="bg-[#FFFFFF] py-24">
+        <div className="container mx-auto px-6 lg:px-8">
+          <div className="mb-12 flex flex-col sm:flex-row sm:items-end sm:justify-between gap-6 border-b border-[#D9DCE3] pb-6">
+            <div>
+              <h2 className="text-3xl font-bold tracking-tight text-[#1A1A1A]">
                 Featured Insights
               </h2>
-              <p className="mt-3 text-lg text-muted-foreground">
-                Discover the most highly-rated and frequently unlocked ideas from our top creators this week.
+              <p className="mt-2 text-[16px] leading-[1.6] text-[#1A1A1A]/70">
+                Highly-rated ideas recently unlocked by the community.
               </p>
             </div>
-            <Button asChild variant="outline" className="shrink-0 gap-2 h-11 border-primary/20 hover:bg-primary/5">
+            <Button asChild variant="ghost" className="shrink-0 gap-2">
               <Link href="/ideas">
-                View all ideas <ArrowRight className="h-4 w-4" />
+                View all <ArrowRight className="h-4 w-4" />
               </Link>
             </Button>
           </div>
           
           <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
             {featuredIdeas.length === 0 ? (
-              <div className="col-span-full rounded-2xl border-2 border-dashed border-border p-16 text-center bg-white">
-                <p className="text-lg text-muted-foreground font-medium">
-                  No ideas have been published yet. Be the first!
+              <div className="col-span-full rounded-[12px] border border-[#D9DCE3] bg-[#F5F6FA] p-12 text-center">
+                <p className="text-[16px] text-[#1A1A1A]/70">
+                  No ideas have been published yet. Be the first to create one.
                 </p>
               </div>
             ) : (
@@ -87,33 +86,28 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* How It Works - Added visual connection lines & action hover */}
-      <section className="py-24 bg-white overflow-hidden">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="mx-auto max-w-2xl text-center mb-20">
-            <h2 className="text-3xl font-extrabold tracking-tight text-foreground sm:text-4xl">
-              Turn your thoughts into income
+      {/* How It Works - Fog Grey Background */}
+      <section className="bg-[#F5F6FA] py-24 border-t border-[#D9DCE3]">
+        <div className="container mx-auto px-6 lg:px-8">
+          <div className="mx-auto max-w-2xl text-center mb-16">
+            <h2 className="text-3xl font-bold tracking-tight text-[#1A1A1A]">
+              Turn your expertise into income
             </h2>
-            <p className="mt-4 text-lg text-muted-foreground">
-              A beautifully simple process to monetize your expertise without the friction of building a full product.
+            <p className="mt-4 text-[16px] leading-[1.6] text-[#1A1A1A]/70">
+              A streamlined platform designed for professionals to monetize their insights without overhead.
             </p>
           </div>
           
-          <div className="relative grid grid-cols-1 gap-12 md:grid-cols-3 md:gap-8">
-            {/* Desktop Connective Line */}
-            <div className="hidden md:block absolute top-12 left-[16%] right-[16%] h-0.5 bg-gradient-to-r from-primary/10 via-primary/40 to-primary/10 -z-10"></div>
-
-            {HOW_IT_WORKS.map(({ icon: Icon, title, description }, i) => (
-              <div key={title} className="group relative text-center">
-                <div className="mx-auto mb-6 flex h-24 w-24 items-center justify-center rounded-full bg-white border-8 border-slate-50 shadow-xl transition-transform duration-300 group-hover:-translate-y-2 group-hover:border-primary/10">
-                  <div className="flex h-14 w-14 items-center justify-center rounded-full bg-primary text-white shadow-inner">
-                    <Icon className="h-6 w-6" />
-                  </div>
+          <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
+            {HOW_IT_WORKS.map(({ icon: Icon, title, description }) => (
+              <div key={title} className="rounded-[12px] border border-[#D9DCE3] bg-[#FFFFFF] p-8 shadow-[0_4px_14px_rgba(0,0,0,0.02)] transition-shadow hover:shadow-[0_8px_24px_rgba(0,0,0,0.06)]">
+                <div className="mb-6 inline-flex h-12 w-12 items-center justify-center rounded-[8px] bg-[#F5F6FA] border border-[#D9DCE3]">
+                  <Icon className="h-5 w-5 text-[#3A5FCD]" />
                 </div>
-                <h3 className="mb-3 text-xl font-bold text-foreground">
+                <h3 className="mb-3 text-[18px] font-semibold text-[#1A1A1A]">
                   {title}
                 </h3>
-                <p className="text-base leading-relaxed text-muted-foreground max-w-xs mx-auto">
+                <p className="text-[16px] leading-[1.6] text-[#1A1A1A]/70">
                   {description}
                 </p>
               </div>
@@ -122,26 +116,22 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* Trust Section - Deep contrasting color block */}
-      <section className="py-24 bg-slate-950 text-white relative overflow-hidden">
-        {/* Abstract creative background pattern */}
-        <div className="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-primary via-slate-950 to-slate-950"></div>
-        
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="mx-auto max-w-4xl text-center">
-            <ShieldCheck className="mx-auto mb-8 h-16 w-16 text-primary" />
-            <h2 className="text-3xl font-extrabold tracking-tight sm:text-5xl mb-6">
-              Bank-grade security, built in.
+      {/* Security Section - Pure White Background */}
+      <section className="bg-[#FFFFFF] py-24 border-t border-[#D9DCE3]">
+        <div className="container mx-auto px-6 lg:px-8">
+          <div className="mx-auto max-w-3xl text-center">
+            <div className="mx-auto mb-6 inline-flex h-16 w-16 items-center justify-center rounded-full bg-[#AEE5D8]/20">
+              <ShieldCheck className="h-8 w-8 text-[#AEE5D8] drop-shadow-sm" />
+            </div>
+            <h2 className="text-3xl font-bold tracking-tight text-[#1A1A1A]">
+              Secure by design
             </h2>
-            <p className="mx-auto max-w-2xl text-xl text-slate-300 mb-12">
-              Payments are processed instantly via Stripe Connect. You receive payouts directly to your bank account with a transparent 15% platform fee. No hidden costs.
+            <p className="mx-auto mt-6 text-[18px] leading-[1.6] text-[#1A1A1A]/70">
+              Payments are processed automatically via Stripe Connect. You receive payouts directly to your bank account with a transparent 15% platform fee.
             </p>
-            <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
-              <Button asChild size="lg" className="w-full sm:w-auto h-14 px-8 bg-primary hover:bg-primary/90 text-white border-0 text-base">
+            <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
+              <Button asChild size="lg">
                 <Link href="/sign-up">Start creating today</Link>
-              </Button>
-              <Button asChild variant="outline" size="lg" className="w-full sm:w-auto h-14 px-8 border-slate-700 bg-slate-900/50 hover:bg-slate-800 text-white text-base">
-                <Link href="/ideas">Explore the market</Link>
               </Button>
             </div>
           </div>
