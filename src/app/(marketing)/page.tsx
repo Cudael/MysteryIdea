@@ -8,21 +8,18 @@ import prisma from "@/lib/prisma";
 const HOW_IT_WORKS = [
   {
     icon: Lock,
-    title: "Post Your Idea",
-    description:
-      "Draft your hidden insight, add a compelling teaser, and set your own price.",
+    title: "Draft your insight",
+    description: "Write your hidden idea, add a compelling teaser, and set your own price.",
   },
   {
     icon: DollarSign,
-    title: "Control Access",
-    description:
-      "Choose exclusive (single buyer) or multi-unlock pricing models.",
+    title: "Set your terms",
+    description: "Choose an exclusive (single buyer) or a multi-unlock pricing model.",
   },
   {
     icon: Zap,
-    title: "Earn Instantly",
-    description:
-      "Buyers unlock instantly. Earnings flow directly to your connected Stripe wallet.",
+    title: "Earn instantly",
+    description: "Buyers unlock your content. Earnings flow directly to your Stripe wallet.",
   },
 ];
 
@@ -41,30 +38,31 @@ export default async function HomePage() {
     <>
       <Hero />
 
-      {/* Featured Ideas */}
-      <section className="border-t border-border bg-muted/20 py-20">
+      {/* Featured Ideas - Added a soft colored background & section tag */}
+      <section className="relative py-24 bg-slate-50 border-y border-border">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="mb-12 flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
-            <div>
-              <h2 className="text-2xl font-semibold tracking-tight text-foreground sm:text-3xl">
-                Featured Ideas
+          <div className="mb-12 flex flex-col md:flex-row md:items-end md:justify-between gap-6">
+            <div className="max-w-xl">
+              <span className="text-primary font-bold tracking-wider text-sm uppercase mb-2 block">Top Marketplace Picks</span>
+              <h2 className="text-3xl font-extrabold tracking-tight text-foreground sm:text-4xl">
+                Featured Insights
               </h2>
-              <p className="mt-2 text-muted-foreground">
-                Unlock high-value insights from top creators.
+              <p className="mt-3 text-lg text-muted-foreground">
+                Discover the most highly-rated and frequently unlocked ideas from our top creators this week.
               </p>
             </div>
-            <Button asChild variant="outline" className="shrink-0 gap-2">
+            <Button asChild variant="outline" className="shrink-0 gap-2 h-11 border-primary/20 hover:bg-primary/5">
               <Link href="/ideas">
-                Browse marketplace <ArrowRight className="h-4 w-4" />
+                View all ideas <ArrowRight className="h-4 w-4" />
               </Link>
             </Button>
           </div>
           
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
             {featuredIdeas.length === 0 ? (
-              <div className="col-span-full rounded-lg border border-dashed border-border p-12 text-center">
-                <p className="text-sm text-muted-foreground">
-                  No ideas have been published yet. Check back soon.
+              <div className="col-span-full rounded-2xl border-2 border-dashed border-border p-16 text-center bg-white">
+                <p className="text-lg text-muted-foreground font-medium">
+                  No ideas have been published yet. Be the first!
                 </p>
               </div>
             ) : (
@@ -89,29 +87,33 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* How It Works */}
-      <section className="py-20">
+      {/* How It Works - Added visual connection lines & action hover */}
+      <section className="py-24 bg-white overflow-hidden">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="mx-auto max-w-2xl text-center mb-16">
-            <h2 className="text-2xl font-semibold tracking-tight text-foreground sm:text-3xl">
-              Monetize your expertise
+          <div className="mx-auto max-w-2xl text-center mb-20">
+            <h2 className="text-3xl font-extrabold tracking-tight text-foreground sm:text-4xl">
+              Turn your thoughts into income
             </h2>
-            <p className="mt-4 text-muted-foreground">
-              A streamlined platform designed to turn your valuable thoughts into passive income.
+            <p className="mt-4 text-lg text-muted-foreground">
+              A beautifully simple process to monetize your expertise without the friction of building a full product.
             </p>
           </div>
           
-          <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
+          <div className="relative grid grid-cols-1 gap-12 md:grid-cols-3 md:gap-8">
+            {/* Desktop Connective Line */}
+            <div className="hidden md:block absolute top-12 left-[16%] right-[16%] h-0.5 bg-gradient-to-r from-primary/10 via-primary/40 to-primary/10 -z-10"></div>
+
             {HOW_IT_WORKS.map(({ icon: Icon, title, description }, i) => (
-              <div key={title} className="relative rounded-2xl border border-border bg-background p-8 shadow-sm">
-                <div className="mb-6 inline-flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">
-                  <Icon className="h-5 w-5 text-primary" />
+              <div key={title} className="group relative text-center">
+                <div className="mx-auto mb-6 flex h-24 w-24 items-center justify-center rounded-full bg-white border-8 border-slate-50 shadow-xl transition-transform duration-300 group-hover:-translate-y-2 group-hover:border-primary/10">
+                  <div className="flex h-14 w-14 items-center justify-center rounded-full bg-primary text-white shadow-inner">
+                    <Icon className="h-6 w-6" />
+                  </div>
                 </div>
-                <h3 className="mb-3 text-lg font-medium text-foreground">
-                  <span className="text-muted-foreground mr-2">{i + 1}.</span>
+                <h3 className="mb-3 text-xl font-bold text-foreground">
                   {title}
                 </h3>
-                <p className="text-sm leading-relaxed text-muted-foreground">
+                <p className="text-base leading-relaxed text-muted-foreground max-w-xs mx-auto">
                   {description}
                 </p>
               </div>
@@ -120,26 +122,27 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* Trust Section */}
-      <section className="border-t border-border py-24">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="mx-auto max-w-4xl overflow-hidden rounded-3xl border border-border bg-zinc-50">
-            <div className="px-6 py-16 sm:px-12 sm:py-20 text-center">
-              <ShieldCheck className="mx-auto mb-6 h-12 w-12 text-zinc-400" />
-              <h2 className="text-2xl font-semibold tracking-tight text-foreground sm:text-4xl">
-                Secure by design
-              </h2>
-              <p className="mx-auto mt-6 max-w-xl text-lg text-muted-foreground">
-                Payments are processed via Stripe Connect. Creators receive payouts directly with a transparent 15% platform fee. All data is encrypted and protected.
-              </p>
-              <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
-                <Button asChild size="lg" className="w-full sm:w-auto">
-                  <Link href="/sign-up">Start creating today</Link>
-                </Button>
-                <Button asChild variant="outline" size="lg" className="w-full sm:w-auto bg-white">
-                  <Link href="/ideas">Explore ideas</Link>
-                </Button>
-              </div>
+      {/* Trust Section - Deep contrasting color block */}
+      <section className="py-24 bg-slate-950 text-white relative overflow-hidden">
+        {/* Abstract creative background pattern */}
+        <div className="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-primary via-slate-950 to-slate-950"></div>
+        
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <div className="mx-auto max-w-4xl text-center">
+            <ShieldCheck className="mx-auto mb-8 h-16 w-16 text-primary" />
+            <h2 className="text-3xl font-extrabold tracking-tight sm:text-5xl mb-6">
+              Bank-grade security, built in.
+            </h2>
+            <p className="mx-auto max-w-2xl text-xl text-slate-300 mb-12">
+              Payments are processed instantly via Stripe Connect. You receive payouts directly to your bank account with a transparent 15% platform fee. No hidden costs.
+            </p>
+            <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
+              <Button asChild size="lg" className="w-full sm:w-auto h-14 px-8 bg-primary hover:bg-primary/90 text-white border-0 text-base">
+                <Link href="/sign-up">Start creating today</Link>
+              </Button>
+              <Button asChild variant="outline" size="lg" className="w-full sm:w-auto h-14 px-8 border-slate-700 bg-slate-900/50 hover:bg-slate-800 text-white text-base">
+                <Link href="/ideas">Explore the market</Link>
+              </Button>
             </div>
           </div>
         </div>
