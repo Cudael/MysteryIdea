@@ -47,13 +47,14 @@ export function Pagination({
   };
 
   return (
-    <div className="mt-10 flex items-center justify-center gap-1">
+    <div className="flex items-center justify-center gap-2">
       <Button
         variant="outline"
         size="sm"
         disabled={currentPage <= 1}
         onClick={() => router.push(createPageUrl(currentPage - 1))}
         aria-label="Previous page"
+        className="w-10 px-0"
       >
         <ChevronLeft className="h-4 w-4" />
       </Button>
@@ -62,7 +63,7 @@ export function Pagination({
         item === "ellipsis" ? (
           <span
             key={`ellipsis-${index}`}
-            className="px-2 text-sm text-muted-foreground"
+            className="px-2 text-sm text-[#1A1A1A]/40"
           >
             …
           </span>
@@ -71,7 +72,8 @@ export function Pagination({
             key={item}
             variant={item === currentPage ? "default" : "outline"}
             size="sm"
-            onClick={() => router.push(createPageUrl(item))}
+            className={item !== currentPage ? "bg-[#FFFFFF] border-[#D9DCE3] text-[#1A1A1A]/70 hover:text-[#1A1A1A]" : ""}
+            onClick={() => router.push(createPageUrl(item as number))}
             aria-label={`Page ${item}`}
             aria-current={item === currentPage ? "page" : undefined}
           >
@@ -86,6 +88,7 @@ export function Pagination({
         disabled={currentPage >= totalPages}
         onClick={() => router.push(createPageUrl(currentPage + 1))}
         aria-label="Next page"
+        className="w-10 px-0 bg-[#FFFFFF] border-[#D9DCE3]"
       >
         <ChevronRight className="h-4 w-4" />
       </Button>
