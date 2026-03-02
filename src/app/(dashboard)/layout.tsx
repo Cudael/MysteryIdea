@@ -9,11 +9,15 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="flex min-h-screen flex-col">
+    <div className="flex min-h-[100dvh] flex-col bg-[#F5F6FA] text-[#1A1A1A] font-sans antialiased selection:bg-[#3A5FCD] selection:text-white">
       <Navbar />
-      <div className="flex flex-1 flex-col md:flex-row">
+      <div className="mx-auto flex w-full max-w-[1600px] flex-1 flex-col md:flex-row">
         <CreatorSidebar />
-        <main className="flex-1 overflow-auto p-6">{children}</main>
+        <main className="flex-1 overflow-auto p-6 md:p-10 lg:p-12">
+          <div className="mx-auto max-w-6xl">
+            {children}
+          </div>
+        </main>
       </div>
     </div>
   );
