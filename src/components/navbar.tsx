@@ -27,11 +27,13 @@ const NAV_LINKS = [
 
 export function Navbar() {
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <header className="sticky top-0 z-50 w-full border-b border-border/50 bg-white/80 backdrop-blur-xl supports-[backdrop-filter]:bg-white/60">
       <div className="container mx-auto flex h-16 items-center justify-between px-4 sm:px-6 lg:px-8">
-        <Link href="/" className="flex items-center gap-2 transition-opacity hover:opacity-90">
-          <Lightbulb className="h-5 w-5 text-primary" />
-          <span className="text-base font-semibold tracking-tight text-foreground">
+        <Link href="/" className="group flex items-center gap-2 transition-transform hover:scale-105">
+          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-white shadow-md shadow-primary/20 transition-colors group-hover:bg-primary/90">
+            <Lightbulb className="h-5 w-5" />
+          </div>
+          <span className="text-xl font-extrabold tracking-tight text-foreground">
             MysteryIdea
           </span>
         </Link>
@@ -42,7 +44,7 @@ export function Navbar() {
             <Link
               key={link.href}
               href={link.href}
-              className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
+              className="text-sm font-bold text-muted-foreground transition-colors hover:text-primary"
             >
               {link.label}
             </Link>
@@ -53,7 +55,7 @@ export function Navbar() {
         <div className="hidden items-center gap-4 md:flex">
           <SignedIn>
             <Link href="/dashboard">
-              <Button variant="ghost" size="sm" className="font-medium">
+              <Button variant="ghost" className="font-bold">
                 Dashboard
               </Button>
             </Link>
@@ -61,12 +63,14 @@ export function Navbar() {
           </SignedIn>
           <SignedOut>
             <SignInButton mode="modal">
-              <Button variant="ghost" size="sm" className="font-medium">
-                Sign In
+              <Button variant="ghost" className="font-bold hover:text-primary">
+                Log in
               </Button>
             </SignInButton>
             <SignUpButton mode="modal">
-              <Button size="sm">Start Selling</Button>
+              <Button className="rounded-full px-6 font-bold shadow-md shadow-primary/20">
+                Start Selling
+              </Button>
             </SignUpButton>
           </SignedOut>
         </div>
@@ -79,13 +83,15 @@ export function Navbar() {
           <Sheet>
             <SheetTrigger asChild>
               <Button variant="ghost" size="icon" aria-label="Open menu">
-                <Menu className="h-5 w-5" />
+                <Menu className="h-6 w-6" />
               </Button>
             </SheetTrigger>
             <SheetContent side="right" className="w-[300px] sm:w-[400px]">
               <SheetHeader className="border-b border-border pb-4">
-                <SheetTitle className="flex items-center gap-2 text-base">
-                  <Lightbulb className="h-4 w-4 text-primary" />
+                <SheetTitle className="flex items-center gap-2 text-lg font-extrabold">
+                  <div className="flex h-6 w-6 items-center justify-center rounded bg-primary text-white">
+                    <Lightbulb className="h-4 w-4" />
+                  </div>
                   MysteryIdea
                 </SheetTitle>
               </SheetHeader>
@@ -94,7 +100,7 @@ export function Navbar() {
                   <SheetClose asChild key={link.href}>
                     <Link
                       href={link.href}
-                      className="rounded-md px-3 py-2.5 text-sm font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+                      className="rounded-lg px-4 py-3 text-base font-bold text-slate-600 transition-colors hover:bg-primary/5 hover:text-primary"
                     >
                       {link.label}
                     </Link>
@@ -104,21 +110,23 @@ export function Navbar() {
                   <SheetClose asChild>
                     <Link
                       href="/dashboard"
-                      className="rounded-md px-3 py-2.5 text-sm font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+                      className="rounded-lg px-4 py-3 text-base font-bold text-slate-600 transition-colors hover:bg-primary/5 hover:text-primary"
                     >
                       Dashboard
                     </Link>
                   </SheetClose>
                 </SignedIn>
                 <SignedOut>
-                  <div className="mt-6 flex flex-col gap-3">
+                  <div className="mt-8 flex flex-col gap-3">
                     <SignInButton mode="modal">
-                      <Button variant="outline" className="w-full justify-center">
-                        Sign In
+                      <Button variant="outline" className="w-full justify-center h-12 text-base font-bold">
+                        Log in
                       </Button>
                     </SignInButton>
                     <SignUpButton mode="modal">
-                      <Button className="w-full justify-center">Get Started</Button>
+                      <Button className="w-full justify-center h-12 text-base font-bold">
+                        Get Started
+                      </Button>
                     </SignUpButton>
                   </div>
                 </SignedOut>
