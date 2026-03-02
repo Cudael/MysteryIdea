@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
-// 1. Direct import from the feature folder to avoid re-export issues
+// Import directly from the features folder to avoid Client Component re-export bugs
 import { IdeaCard } from "@/features/ideas/components/idea-card";
 import { IdeaFilters } from "@/features/ideas/components/idea-filters";
 import { Pagination } from "@/components/shared/pagination";
@@ -12,7 +12,6 @@ export const metadata: Metadata = {
   description: "Browse and unlock premium ideas from top creators.",
 };
 
-// 2. Next.js 15 requires searchParams to be explicitly typed as a Promise
 interface IdeasPageProps {
   searchParams: Promise<{
     search?: string;
@@ -24,7 +23,6 @@ interface IdeasPageProps {
 }
 
 export default async function IdeasPage({ searchParams }: IdeasPageProps) {
-  // 3. Await the params before attempting to destructure or access keys
   const params = await searchParams;
   
   const search = params?.search ?? "";
@@ -65,7 +63,6 @@ export default async function IdeasPage({ searchParams }: IdeasPageProps) {
     prisma.idea.count({ where }),
   ]);
 
-  // Sort by most purchased after fetching when needed
   const sortedIdeas =
     sortBy === "most-purchased"
       ? [...ideas].sort((a, b) => b._count.purchases - a._count.purchases)
