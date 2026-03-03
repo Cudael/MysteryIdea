@@ -1,7 +1,7 @@
 import { Suspense } from "react";
 import type { Metadata } from "next";
 import { IdeaCard } from "@/features/ideas/components/idea-card";
-import { IdeaFilters } from "@/features/ideas/components/idea-filters";
+import { IdeaFilters } from "@/features/ideas/components/idea-filters-client";
 import { Pagination } from "@/components/shared/pagination";
 import prisma from "@/lib/prisma";
 import { ITEMS_PER_PAGE } from "@/lib/constants";
@@ -84,7 +84,7 @@ export default async function IdeasPage({ searchParams }: IdeasPageProps) {
         </div>
 
         <div className="mb-10">
-          <Suspense fallback={<div className="h-10 animate-pulse rounded-lg bg-[#D9DCE3]" />}> 
+          <Suspense fallback={<div className="h-10 animate-pulse rounded-lg bg-[#D9DCE3]" />}>;
             <IdeaFilters />
           </Suspense>
         </div>
@@ -116,7 +116,9 @@ export default async function IdeasPage({ searchParams }: IdeasPageProps) {
 
             {totalPages > 1 && (
               <div className="flex justify-center">
-                <Pagination currentPage={page} totalPages={totalPages} basePath="/ideas" />
+                <Suspense fallback={null}>
+                  <Pagination currentPage={page} totalPages={totalPages} basePath="/ideas" />
+                </Suspense>
               </div>
             )}
           </>
