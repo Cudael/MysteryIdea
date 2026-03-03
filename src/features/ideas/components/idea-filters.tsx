@@ -18,8 +18,7 @@ const SORT_OPTIONS = [
   { label: "Most Popular", value: "most-purchased" },
 ];
 
-// Changed from "export function IdeaFilters()" to default export
-export default function IdeaFilters() {
+export function IdeaFilters() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
