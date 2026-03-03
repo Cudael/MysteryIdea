@@ -1,4 +1,3 @@
-import { Suspense } from "react";
 import type { Metadata } from "next";
 import { IdeaCard } from "@/features/ideas/components/idea-card";
 import { IdeaFilters } from "@/features/ideas/components/idea-filters";
@@ -83,7 +82,6 @@ export default async function IdeasPage({ searchParams }: IdeasPageProps) {
           </p>
         </div>
 
-        {/* Remove Suspense wrapper - IdeaFilters is a client component */}
         <div className="mb-10">
           <IdeaFilters />
         </div>
@@ -96,7 +94,20 @@ export default async function IdeasPage({ searchParams }: IdeasPageProps) {
           <>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
               {sortedIdeas.map((idea) => (
-                <IdeaCard key={idea.id} idea={idea} />
+                <IdeaCard
+                  key={idea.id}
+                  id={idea.id}
+                  title={idea.title}
+                  teaserText={idea.teaserText}
+                  teaserImageUrl={idea.teaserImageUrl}
+                  priceInCents={idea.priceInCents}
+                  unlockType={idea.unlockType}
+                  category={idea.category}
+                  creatorId={idea.creator.id}
+                  creatorName={idea.creator.name}
+                  creatorAvatarUrl={idea.creator.avatarUrl}
+                  purchaseCount={idea._count.purchases}
+                />
               ))}
             </div>
 
