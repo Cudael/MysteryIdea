@@ -1,13 +1,12 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import { Sparkles, Menu } from "lucide-react";
 import {
   SignedIn,
   SignedOut,
   UserButton,
-  SignInButton,
-  SignUpButton,
 } from "@clerk/nextjs";
 import { Button } from "@/components/ui/button";
 import {
@@ -17,6 +16,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import { AuthModal } from "@/components/auth/auth-modal";
 
 const NAV_LINKS = [
   { href: "/", label: "Home" },
@@ -25,6 +25,11 @@ const NAV_LINKS = [
 ];
 
 export function Navbar() {
+  const [authModal, setAuthModal] = useState<{ open: boolean; tab: "sign-in" | "sign-up" }>({
+    open: false,
+    tab: "sign-in",
+  });
+
   return (
     <header className="sticky top-0 z-50 w-full border-b border-[#D9DCE3] bg-[#FFFFFF]/90 backdrop-blur-md shadow-[0_4px_20px_rgba(0,0,0,0.02)] transition-all duration-300">
       <div className="container mx-auto flex h-[72px] items-center justify-between px-6 lg:px-8">
@@ -69,16 +74,19 @@ export function Navbar() {
             />
           </SignedIn>
           <SignedOut>
-            <SignInButton mode="modal">
-              <Button variant="ghost" className="h-10 text-[15px] font-medium text-[#1A1A1A]/70 hover:text-[#1A1A1A] hover:bg-[#F8F9FC]">
-                Log In
-              </Button>
-            </SignInButton>
-            <SignUpButton mode="modal">
-              <Button className="h-10 px-5 text-[15px] font-medium bg-[#3A5FCD] hover:bg-[#6D7BE0] text-white shadow-[0_2px_8px_rgba(58,95,205,0.25)] transition-all hover:shadow-[0_4px_12px_rgba(58,95,205,0.35)] hover:-translate-y-[1px]">
-                Start Creating
-              </Button>
-            </SignUpButton>
+            <Button
+              variant="ghost"
+              onClick={() => setAuthModal({ open: true, tab: "sign-in" })}
+              className="h-10 text-[15px] font-medium text-[#1A1A1A]/70 hover:text-[#1A1A1A] hover:bg-[#F8F9FC]"
+            >
+              Log In
+            </Button>
+            <Button
+              onClick={() => setAuthModal({ open: true, tab: "sign-up" })}
+              className="h-10 px-5 text-[15px] font-medium bg-[#3A5FCD] hover:bg-[#6D7BE0] text-white shadow-[0_2px_8px_rgba(58,95,205,0.25)] transition-all hover:shadow-[0_4px_12px_rgba(58,95,205,0.35)] hover:-translate-y-[1px]"
+            >
+              Start Creating
+            </Button>
           </SignedOut>
         </div>
 
@@ -116,12 +124,19 @@ export function Navbar() {
                 
                 <SignedOut>
                   <div className="mt-4 flex flex-col gap-3 pt-6 border-t border-[#D9DCE3]">
-                    <SignInButton mode="modal">
-                      <Button variant="outline" className="w-full justify-center border-[#D9DCE3]">Log In</Button>
-                    </SignInButton>
-                    <SignUpButton mode="modal">
-                      <Button className="w-full justify-center bg-[#3A5FCD] hover:bg-[#6D7BE0] text-white">Start Creating</Button>
-                    </SignUpButton>
+                    <Button
+                      variant="outline"
+                      className="w-full justify-center border-[#D9DCE3]"
+                      onClick={() => setAuthModal({ open: true, tab: "sign-in" })}
+                    >
+                      Log In
+                    </Button>
+                    <Button
+                      className="w-full justify-center bg-[#3A5FCD] hover:bg-[#6D7BE0] text-white"
+                      onClick={() => setAuthModal({ open: true, tab: "sign-up" })}
+                    >
+                      Start Creating
+                    </Button>
                   </div>
                 </SignedOut>
                 
@@ -137,6 +152,11 @@ export function Navbar() {
           </Sheet>
         </div>
       </div>
+      <AuthModal
+        open={authModal.open}
+        onOpenChange={(open) => setAuthModal((prev) => ({ ...prev, open }))}
+        defaultTab={authModal.tab}
+      />
     </header>
   );
 }
