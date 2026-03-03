@@ -1,6 +1,7 @@
+import { Suspense } from "react";
 import type { Metadata } from "next";
 import { IdeaCard } from "@/features/ideas/components/idea-card";
-import IdeaFilters from "@/features/ideas/components/idea-filters"; // Changed to default import
+import { IdeaFilters } from "@/features/ideas/components/idea-filters";
 import { Pagination } from "@/components/shared/pagination";
 import prisma from "@/lib/prisma";
 import { ITEMS_PER_PAGE } from "@/lib/constants";
@@ -22,7 +23,7 @@ interface IdeasPageProps {
 
 export default async function IdeasPage({ searchParams }: IdeasPageProps) {
   const params = await searchParams;
-  
+
   const search = params?.search ?? "";
   const category = params?.category ?? "";
   const unlockType = params?.unlockType ?? "";
@@ -71,7 +72,7 @@ export default async function IdeasPage({ searchParams }: IdeasPageProps) {
   return (
     <div className="bg-[#F5F6FA] min-h-screen py-12 md:py-16">
       <div className="container mx-auto px-6 lg:px-8 max-w-7xl">
-        
+
         <div className="mb-8 pb-6 border-b border-[#D9DCE3]">
           <h1 className="text-3xl font-bold tracking-tight text-[#1A1A1A]">Explore Marketplace</h1>
           <p className="mt-3 text-[16px] leading-[1.6] text-[#1A1A1A]/70">
@@ -83,7 +84,9 @@ export default async function IdeasPage({ searchParams }: IdeasPageProps) {
         </div>
 
         <div className="mb-10">
-          <IdeaFilters />
+          <Suspense fallback={<div className="h-10 animate-pulse rounded-lg bg-[#D9DCE3]" />}> 
+            <IdeaFilters />
+          </Suspense>
         </div>
 
         {sortedIdeas.length === 0 ? (
