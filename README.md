@@ -10,7 +10,12 @@
 - 💰 **Creator Monetization** — Set your own price; earn to your wallet, withdraw anytime
 - 🎭 **Teasers** — Add text/image teasers to spark buyer curiosity
 - 🛒 **Instant Unlock** — Buyers unlock ideas instantly after payment
-- 📊 **Creator Dashboard** — Track earnings, manage ideas, and monitor unlocks
+- 📊 **Creator Dashboard** — Track earnings, manage ideas, and monitor unlocks with full analytics
+- 💳 **Wallet System** — Built-in wallet with deposits, withdrawals, and transaction history
+- ⭐ **Reviews & Ratings** — Buyers can rate and review purchased ideas
+- 🔖 **Bookmarks** — Save ideas for later with a personal wishlist
+- 🛡️ **Reports &amp; Moderation** — Flag inappropriate content with structured reporting
+- 💸 **Refund Requests** — Buyers can request refunds on purchases
 - 🔑 **Auth via Clerk** — Secure sign-in and sign-up flows
 - 🖼️ **Image Uploads** — Powered by Uploadthing
 - 📧 **Email Notifications** — Transactional emails via Resend
@@ -48,8 +53,8 @@
 
 ```bash
 # 1. Clone the repository
-git clone https://github.com/Cudael/MysteryIdea.git
-cd MysteryIdea
+git clone https://github.com/Cudael/mysterymarket.git
+cd mysterymarket
 
 # 2. Install dependencies
 npm install
@@ -96,41 +101,50 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 ```
 src/
-├── actions/          # Server actions (ideas, purchases, stripe-connect, users)
 ├── app/
 │   ├── (dashboard)/  # Protected dashboard routes
 │   ├── (marketing)/  # Public marketing pages
 │   ├── (marketplace)/# Public marketplace pages
-│   ├── api/          # API routes (webhooks, uploadthing)
+│   ├── api/          # API routes (webhooks, uploadthing, health)
 │   ├── sign-in/      # Clerk sign-in page
 │   └── sign-up/      # Clerk sign-up page
 ├── components/
-│   ├── ui/           # shadcn/ui base components
-│   ├── navbar.tsx
-│   ├── footer.tsx
-│   ├── hero.tsx
-│   └── idea-card.tsx
+│   ├── layout/       # Navbar, footer, hero, sidebars
+│   ├── shared/       # Pagination, share buttons, etc.
+│   └── ui/           # shadcn/ui base components
+├── features/
+│   ├── analytics/    # Creator analytics actions
+│   ├── bookmarks/    # Bookmark actions & components
+│   ├── ideas/        # Idea CRUD actions, schemas & components
+│   ├── purchases/    # Purchase actions & components
+│   ├── refunds/      # Refund request actions & components
+│   ├── reports/      # Report actions & components
+│   ├── reviews/      # Review actions & components
+│   ├── stripe/       # Stripe Connect actions
+│   ├── users/        # User sync & profile actions
+│   └── wallet/       # Wallet actions & components
 ├── hooks/            # Custom React hooks
-├── lib/              # Prisma, Stripe, utils, uploadthing
+├── lib/              # Prisma, Stripe, utils, uploadthing, rate-limit, emails
 └── types/            # TypeScript type definitions
 prisma/
-└── schema.prisma     # Database schema
+├── schema.prisma     # Database schema
+├── seed.ts           # Demo data seeding
+└── migrations/       # Database migrations
 ```
 
 ---
 
 ## Roadmap
 
-- ✅ **Completed foundation:** Auth, ideas CRUD, purchases, wallet, analytics, reviews/reports, bookmarks, creator profiles
-- 🚧 **Current execution plan:** Follow phased delivery in `IMPLEMENTATION_PLAN.md`
-  - **Phase 0:** Docs + metrics + event instrumentation
-  - **Phase 1:** Buyer retention UX (purchase history + post-purchase flow)
-  - **Phase 2:** Discovery and recommendation quality
-  - **Phase 3:** Trust, safety, and moderation workflows
-  - **Phase 4:** Creator growth and monetization optimization
-  - **Phase 5:** Growth loops and content engine
-
-See `docs/metrics.md` for KPI definitions used to validate each phase.
+- ✅ Auth, ideas CRUD, purchases, Stripe Connect, wallet system
+- ✅ Reviews & ratings, reports, refund requests
+- ✅ Creator analytics dashboard
+- ✅ Bookmarks / Wishlist
+- 🔜 Category landing pages & advanced search
+- 🔜 Notifications center
+- 🔜 Admin dashboard & moderation console
+- 🔜 Creator profile enhancements
+- 🔜 Dark mode
 
 ---
 
