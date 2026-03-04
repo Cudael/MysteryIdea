@@ -23,19 +23,28 @@ MysteryIdea is a premium idea marketplace built with Next.js 15 (App Router), Pr
 7. **Prices in cents**: All prices stored as integers in cents; display with `formatPrice()` from `src/lib/utils.ts`
 
 ## Project Structure
-- `src/app/(marketing)/` — Public marketing pages (landing, about)
-- `src/app/(marketplace)/` — Browse/detail pages for ideas
-- `src/app/(dashboard)/` — Protected user/creator dashboards
-- `src/actions/` — Server actions (ideas, purchases, stripe-connect, users)
-- `src/components/` — Reusable components + shadcn/ui in `ui/`
-- `src/lib/` — Prisma client, Stripe SDK, utilities
+- `src/app/(marketing)/` — Public marketing pages (landing, about, legal)
+- `src/app/(marketplace)/` — Browse/detail pages for ideas, creator profiles, checkout
+- `src/app/(dashboard)/` — Protected buyer/creator dashboards
+- `src/features/` — Feature modules (each with actions/, components/, schemas/)
+  - `analytics/`, `bookmarks/`, `ideas/`, `purchases/`, `refunds/`, `reports/`, `reviews/`, `stripe/`, `users/`, `wallet/`
+- `src/components/` — Shared components: `layout/`, `shared/`, `ui/` (shadcn)
+- `src/lib/` — Prisma client, Stripe SDK, utilities, rate-limit, email templates
+- `src/hooks/` — Custom React hooks
 - `src/types/` — Shared TypeScript interfaces
 - `prisma/schema.prisma` — Database schema
 
 ## Database Models
-- **User**: clerkId, email, name, stripeAccountId, stripeOnboarded, role (USER/CREATOR/ADMIN)
-- **Idea**: title, teaserText, teaserImageUrl, hiddenContent, priceInCents, unlockType (EXCLUSIVE/MULTI), published
-- **Purchase**: buyerId, ideaId, amountInCents, platformFeeInCents, stripePaymentIntentId, status
+- **User**: clerkId, email, name, bio, avatarUrl, stripeAccountId, stripeOnboarded, role (USER/CREATOR/ADMIN)
+- **Idea**: title, teaserText, teaserImageUrl, hiddenContent, priceInCents, currency, unlockType (EXCLUSIVE/MULTI), category, tags, published
+- **Purchase**: buyerId, ideaId, amountInCents, platformFeeInCents, stripePaymentIntentId, status (PENDING/COMPLETED/REFUNDED/FAILED)
+- **Review**: rating, comment, buyerId, ideaId (unique per buyer-idea pair)
+- **Report**: reason (MISLEADING/INAPPROPRIATE/SPAM/PLAGIARISM/OTHER), details, reporterId, ideaId, status
+- **RefundRequest**: purchaseId, reason, status (PENDING/APPROVED/DENIED)
+- **Wallet**: userId, balanceInCents, totalEarnedInCents, totalWithdrawnInCents
+- **WalletTransaction**: walletId, type (EARNING/WITHDRAWAL/REFUND_DEBIT/DEPOSIT/PURCHASE), amountInCents, description
+- **WithdrawalRequest**: walletId, amountInCents, status (PENDING/PROCESSING/COMPLETED/FAILED), stripePayoutId
+- **Bookmark**: userId, ideaId (unique per user-idea pair)
 
 ## Environment Variables (see .env.example)
 DATABASE_URL, CLERK keys, STRIPE keys, UPLOADTHING keys, RESEND key, NEXT_PUBLIC_APP_URL
