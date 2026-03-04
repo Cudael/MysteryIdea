@@ -126,6 +126,11 @@ export async function getPurchasesByUser() {
           hiddenContent: true,
           priceInCents: true,
           creator: { select: { name: true, avatarUrl: true } },
+          reviews: {
+            where: { buyerId: user.id },
+            select: { id: true },
+            take: 1,
+          },
         },
       },
     },
