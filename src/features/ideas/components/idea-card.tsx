@@ -45,10 +45,7 @@ export function IdeaCard({
         ) : (
           <>
             {/* Premium dark gradient */}
-            <div className="absolute inset-0 bg-gradient-to-br from-[#1E1F25] via-[#2A2C35] to-[#1A1B22]" />
-
-            {/* Soft vignette */}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
+            <div className="absolute inset-0 bg-red-600" />
           </>
         )}
 
