@@ -31,8 +31,8 @@ export function IdeaCard({
   return (
     <div className="flex h-full flex-col overflow-hidden rounded-xl border border-border bg-card text-card-foreground shadow-sm transition-shadow hover:shadow-md">
       
-      {/* Image Header Area - Light base with a subtle grey fallback */}
-      <div className="relative h-48 w-full shrink-0 overflow-hidden bg-[#E8EAF0]">
+      {/* Image Header Area */}
+      <div className="relative h-48 w-full shrink-0 overflow-hidden bg-[#C8CBD6]">
         
         {/* Placeholder Background OR Actual Image */}
         {teaserImageUrl ? (
@@ -43,17 +43,29 @@ export function IdeaCard({
             className="object-cover"
           />
         ) : (
-          /* Light cool-grey gradient for ideas without a teaser image */
-          <div className="absolute inset-0 bg-gradient-to-br from-[#D9DCE3] to-[#E8EAF0]" />
+          <>
+            {/* Base gradient */}
+            <div className="absolute inset-0 bg-gradient-to-br from-[#B8BCC9] via-[#C8CBD6] to-[#A8ADBE]" />
+            {/* Subtle dot pattern overlay */}
+            <div
+              className="absolute inset-0 opacity-30"
+              style={{
+                backgroundImage: "radial-gradient(circle, #8890A8 1px, transparent 1px)",
+                backgroundSize: "20px 20px",
+              }}
+            />
+            {/* Soft vignette to add depth */}
+            <div className="absolute inset-0 bg-gradient-to-t from-[#9298AA]/40 via-transparent to-transparent" />
+          </>
         )}
 
         {/* Lock Overlay for Unpurchased Ideas */}
         {isLocked && (
-          <div className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-[#FFFFFF]/60 backdrop-blur-sm">
-            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#FFFFFF]/95 border border-[#D9DCE3] shadow-xl">
-              <Lock className="h-5 w-5 text-[#555E7A]" strokeWidth={2.5} />
+          <div className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-[#A8ADBE]/50 backdrop-blur-[2px]">
+            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white/90 border border-[#D9DCE3] shadow-xl">
+              <Lock className="h-5 w-5 text-[#3A5FCD]" strokeWidth={2.5} />
             </div>
-            <span className="mt-3 rounded-full bg-[#FFFFFF]/95 border border-[#D9DCE3] px-3 py-1 text-xs font-semibold tracking-wide text-[#555E7A] shadow-xl">
+            <span className="mt-3 rounded-full bg-white/90 border border-[#D9DCE3] px-3 py-1 text-xs font-semibold tracking-wide text-[#3A4466] shadow-xl">
               Locked Content
             </span>
           </div>
@@ -66,12 +78,12 @@ export function IdeaCard({
               <Link
                 href={`/ideas/category/${CATEGORY_META[category].slug}`}
                 onClick={(e) => e.stopPropagation()}
-                className="inline-flex items-center rounded-md bg-background/95 px-2.5 py-1 text-xs font-medium text-foreground shadow-sm border border-border hover:bg-muted transition-colors"
+                className="inline-flex items-center rounded-md bg-white/90 px-2.5 py-1 text-xs font-medium text-foreground shadow-sm border border-[#D9DCE3] hover:bg-white transition-colors"
               >
                 {category}
               </Link>
             ) : (
-              <span className="inline-flex items-center rounded-md bg-background/95 px-2.5 py-1 text-xs font-medium text-foreground shadow-sm border border-border">
+              <span className="inline-flex items-center rounded-md bg-white/90 px-2.5 py-1 text-xs font-medium text-foreground shadow-sm border border-[#D9DCE3]">
                 {category}
               </span>
             )}
@@ -90,7 +102,7 @@ export function IdeaCard({
                 unlockType === "EXCLUSIVE" 
                   ? "bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-400"
                   : "bg-secondary text-secondary-foreground"
-              }`}
+              }"}
             >
               {unlockType === "EXCLUSIVE" ? "Exclusive" : "Multi-unlock"}
             </span>
@@ -160,15 +172,13 @@ export function IdeaCard({
               </Button>
             ) : isPurchased ? (
               <Button asChild size="sm" className="bg-green-600 hover:bg-green-700 text-white gap-1.5">
-                <Link href={`/ideas/${id}`}> 
+                <Link href={`/ideas/${id}`}>          
                   <Unlock className="h-3.5 w-3.5" /> Read
                 </Link>
               </Button>
             ) : (
               <Button asChild size="sm" className="gap-1.5">
-                <Link href={`/ideas/${id}`}> 
-                  Unlock Now
-                </Link>
+                <Link href={`/ideas/${id}`}>Unlock Now</Link>
               </Button>
             )}
           </div>
