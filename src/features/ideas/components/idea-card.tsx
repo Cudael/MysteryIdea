@@ -31,8 +31,8 @@ export function IdeaCard({
   return (
     <div className="flex h-full flex-col overflow-hidden rounded-xl border border-border bg-card text-card-foreground shadow-sm transition-shadow hover:shadow-md">
       
-      {/* Image Header Area - Explicitly dark base background */}
-      <div className="relative h-48 w-full shrink-0 overflow-hidden bg-[#121212]">
+      {/* Image Header Area - Light base with a subtle grey fallback */}
+      <div className="relative h-48 w-full shrink-0 overflow-hidden bg-[#E8EAF0]">
         
         {/* Placeholder Background OR Actual Image */}
         {teaserImageUrl ? (
@@ -43,17 +43,17 @@ export function IdeaCard({
             className="object-cover"
           />
         ) : (
-          /* Hardcoded hex gradient: guaranteed to show as a premium dark gradient */
-          <div className="absolute inset-0 bg-gradient-to-br from-[#2D2D2D] to-[#121212]" />
+          /* Light cool-grey gradient for ideas without a teaser image */
+          <div className="absolute inset-0 bg-gradient-to-br from-[#D9DCE3] to-[#E8EAF0]" />
         )}
 
         {/* Lock Overlay for Unpurchased Ideas */}
         {isLocked && (
-          <div className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-[#000000]/40 backdrop-blur-sm">
-            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#1A1A1A]/95 border border-[#333333] shadow-xl">
-              <Lock className="h-5 w-5 text-[#E5E5E5]" strokeWidth={2.5} />
+          <div className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-[#FFFFFF]/60 backdrop-blur-sm">
+            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#FFFFFF]/95 border border-[#D9DCE3] shadow-xl">
+              <Lock className="h-5 w-5 text-[#555E7A]" strokeWidth={2.5} />
             </div>
-            <span className="mt-3 rounded-full bg-[#1A1A1A]/95 border border-[#333333] px-3 py-1 text-xs font-semibold tracking-wide text-[#E5E5E5] shadow-xl">
+            <span className="mt-3 rounded-full bg-[#FFFFFF]/95 border border-[#D9DCE3] px-3 py-1 text-xs font-semibold tracking-wide text-[#555E7A] shadow-xl">
               Locked Content
             </span>
           </div>
@@ -160,13 +160,13 @@ export function IdeaCard({
               </Button>
             ) : isPurchased ? (
               <Button asChild size="sm" className="bg-green-600 hover:bg-green-700 text-white gap-1.5">
-                <Link href={`/ideas/${id}`}>
+                <Link href={`/ideas/${id}`}> 
                   <Unlock className="h-3.5 w-3.5" /> Read
                 </Link>
               </Button>
             ) : (
               <Button asChild size="sm" className="gap-1.5">
-                <Link href={`/ideas/${id}`}>
+                <Link href={`/ideas/${id}`}> 
                   Unlock Now
                 </Link>
               </Button>
