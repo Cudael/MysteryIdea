@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { Lock, Unlock, Users, Image as ImageIcon } from "lucide-react";
+import { Lock, Unlock, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { BookmarkButton } from "@/features/bookmarks/components/bookmark-button";
 import { formatPrice } from "@/lib/utils";
@@ -33,10 +33,11 @@ export function IdeaCard({
       
       {/* 
         Image Header Area 
-        Using a fixed height (h-48) guarantees the container won't collapse. 
-        overflow-hidden ensures the frosted glass doesn't bleed out.
+        Fixed height of 12rem (h-48) to prevent layout collapse.
       */}
-      <div className="relative h-48 w-full shrink-0 overflow-hidden bg-muted">
+      <div className="relative h-48 w-full shrink-0 overflow-hidden bg-muted/30">
+        
+        {/* Placeholder Background (Dot Pattern) OR Actual Image */}
         {teaserImageUrl ? (
           <Image
             src={teaserImageUrl}
@@ -45,18 +46,16 @@ export function IdeaCard({
             className="object-cover"
           />
         ) : (
-          <div className="flex h-full w-full items-center justify-center bg-muted/50">
-            <ImageIcon className="h-8 w-8 text-muted-foreground/30" />
-          </div>
+          <div className="absolute inset-0 bg-[radial-gradient(#cbd5e1_1px,transparent_1px)] [background-size:16px_16px] opacity-70 dark:bg-[radial-gradient(#334155_1px,transparent_1px)]" />
         )}
 
         {/* Lock Overlay for Unpurchased Ideas */}
         {isLocked && (
-          <div className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-background/60 backdrop-blur-sm">
-            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-background/90 border border-border shadow-sm">
-              <Lock className="h-5 w-5 text-foreground" strokeWidth={2.5} />
+          <div className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-background/60 backdrop-blur-md">
+            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-background border border-border shadow-md">
+              <Lock className="h-5 w-5 text-muted-foreground" strokeWidth={2.5} />
             </div>
-            <span className="mt-2 rounded-full bg-background/90 border border-border px-3 py-1 text-xs font-semibold tracking-wide text-foreground shadow-sm">
+            <span className="mt-3 rounded-full bg-background border border-border px-3 py-1 text-xs font-semibold tracking-wide text-foreground shadow-sm">
               Locked Content
             </span>
           </div>
@@ -80,37 +79,41 @@ export function IdeaCard({
             )}
           </div>
         )}
-
-        {/* Top Right: Bookmark Button */}
-        {!isOwner && (
-          <div className="absolute right-3 top-3 z-20">
-            <BookmarkButton
-              ideaId={id}
-              initialBookmarked={initialBookmarked}
-              isAuthenticated={isAuthenticated}
-            />
-          </div>
-        )}
       </div>
 
       {/* Content Area */}
       <div className="flex flex-1 flex-col p-5">
         
-        {/* Badges Row */}
-        <div className="mb-3 flex items-center justify-between gap-4">
-          <span
-            className={`inline-flex items-center rounded bg-secondary px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-secondary-foreground ${
-              unlockType === "EXCLUSIVE" && "bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-400"
-            }`}
-          >
-            {unlockType === "EXCLUSIVE" ? "Exclusive" : "Multi-unlock"}
-          </span>
-
-          {purchaseCount !== undefined && purchaseCount > 0 && (
-            <span className="flex items-center gap-1.5 text-xs font-medium text-muted-foreground">
-              <Users className="h-3.5 w-3.5" />
-              {purchaseCount}
+        {/* Top Row: Badges & Bookmark */}
+        <div className="mb-3 flex items-start justify-between gap-4">
+          <div className="flex flex-wrap items-center gap-2 mt-1">
+            <span
+              className={`inline-flex items-center rounded px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider ${
+                unlockType === "EXCLUSIVE" 
+                  ? "bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-400"
+                  : "bg-secondary text-secondary-foreground"
+              }`}
+            >
+              {unlockType === "EXCLUSIVE" ? "Exclusive" : "Multi-unlock"}
             </span>
+
+            {purchaseCount !== undefined && purchaseCount > 0 && (
+              <span className="flex items-center gap-1.5 text-xs font-medium text-muted-foreground">
+                <Users className="h-3.5 w-3.5" />
+                {purchaseCount}
+              </span>
+            )}
+          </div>
+
+          {/* Bookmark moved here to ensure it's always visible and clickable */}
+          {!isOwner && (
+            <div className="shrink-0">
+              <BookmarkButton
+                ideaId={id}
+                initialBookmarked={initialBookmarked}
+                isAuthenticated={isAuthenticated}
+              />
+            </div>
           )}
         </div>
 
