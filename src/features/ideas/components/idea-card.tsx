@@ -30,10 +30,10 @@ export function IdeaCard({
 
   return (
     <div className="flex h-full flex-col overflow-hidden rounded-xl border border-border bg-card text-card-foreground shadow-sm transition-shadow hover:shadow-md">
-      
+
       {/* Image Header Area */}
-      <div className="relative h-48 w-full shrink-0 overflow-hidden bg-[#C8CBD6]">
-        
+      <div className="relative h-48 w-full shrink-0 overflow-hidden bg-[#1A1B22]">
+
         {/* Placeholder Background OR Actual Image */}
         {teaserImageUrl ? (
           <Image
@@ -44,24 +44,17 @@ export function IdeaCard({
           />
         ) : (
           <>
-            {/* Base gradient */}
-            <div className="absolute inset-0 bg-gradient-to-br from-[#B8BCC9] via-[#C8CBD6] to-[#A8ADBE]" />
-            {/* Subtle dot pattern overlay */}
-            <div
-              className="absolute inset-0 opacity-30"
-              style={{
-                backgroundImage: "radial-gradient(circle, #8890A8 1px, transparent 1px)",
-                backgroundSize: "20px 20px",
-              }}
-            />
-            {/* Soft vignette to add depth */}
-            <div className="absolute inset-0 bg-gradient-to-t from-[#9298AA]/40 via-transparent to-transparent" />
+            {/* Premium dark gradient */}
+            <div className="absolute inset-0 bg-gradient-to-br from-[#1E1F25] via-[#2A2C35] to-[#1A1B22]" />
+
+            {/* Soft vignette */}
+            <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
           </>
         )}
 
         {/* Lock Overlay for Unpurchased Ideas */}
         {isLocked && (
-          <div className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-[#A8ADBE]/50 backdrop-blur-[2px]">
+          <div className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-[#1A1B22]/50 backdrop-blur-[2px]">
             <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white/90 border border-[#D9DCE3] shadow-xl">
               <Lock className="h-5 w-5 text-[#3A5FCD]" strokeWidth={2.5} />
             </div>
@@ -93,7 +86,7 @@ export function IdeaCard({
 
       {/* Content Area */}
       <div className="flex flex-1 flex-col p-5">
-        
+
         {/* Top Row: Badges & Bookmark */}
         <div className="mb-3 flex items-start justify-between gap-4">
           <div className="flex flex-wrap items-center gap-2 mt-1">
@@ -139,12 +132,11 @@ export function IdeaCard({
           </p>
         )}
 
-        {/* Spacer to push footer to bottom */}
         <div className="flex-1" />
 
-        {/* Footer: Price, Creator, and Action */}
+        {/* Footer */}
         <div className="mt-5 flex items-center justify-between border-t border-border pt-4">
-          
+
           <div className="flex flex-col">
             <span className="text-xl font-black tracking-tight text-foreground">
               {formatPrice(priceInCents)}
@@ -172,7 +164,7 @@ export function IdeaCard({
               </Button>
             ) : isPurchased ? (
               <Button asChild size="sm" className="bg-green-600 hover:bg-green-700 text-white gap-1.5">
-                <Link href={`/ideas/${id}`}>  
+                <Link href={`/ideas/${id}`}>
                   <Unlock className="h-3.5 w-3.5" /> Read
                 </Link>
               </Button>
@@ -182,7 +174,7 @@ export function IdeaCard({
               </Button>
             )}
           </div>
-          
+
         </div>
       </div>
     </div>
