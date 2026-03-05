@@ -31,8 +31,8 @@ export function IdeaCard({
   return (
     <div className="flex h-full flex-col overflow-hidden rounded-xl border border-border bg-card text-card-foreground shadow-sm transition-shadow hover:shadow-md">
       
-      {/* Image Header Area */}
-      <div className="relative h-48 w-full shrink-0 overflow-hidden bg-zinc-950">
+      {/* Image Header Area - Explicitly dark base background */}
+      <div className="relative h-48 w-full shrink-0 overflow-hidden bg-[#121212]">
         
         {/* Placeholder Background OR Actual Image */}
         {teaserImageUrl ? (
@@ -43,17 +43,17 @@ export function IdeaCard({
             className="object-cover"
           />
         ) : (
-          /* Smooth, dark, premium gradient instead of harsh dots */
-          <div className="absolute inset-0 bg-gradient-to-br from-zinc-800 to-zinc-950" />
+          /* Hardcoded hex gradient: guaranteed to show as a premium dark gradient */
+          <div className="absolute inset-0 bg-gradient-to-br from-[#2D2D2D] to-[#121212]" />
         )}
 
         {/* Lock Overlay for Unpurchased Ideas */}
         {isLocked && (
-          <div className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-black/40 backdrop-blur-sm">
-            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-zinc-900/90 border border-zinc-700 shadow-xl">
-              <Lock className="h-5 w-5 text-zinc-300" strokeWidth={2.5} />
+          <div className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-[#000000]/40 backdrop-blur-sm">
+            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#1A1A1A]/95 border border-[#333333] shadow-xl">
+              <Lock className="h-5 w-5 text-[#E5E5E5]" strokeWidth={2.5} />
             </div>
-            <span className="mt-3 rounded-full bg-zinc-900/90 border border-zinc-700 px-3 py-1 text-xs font-semibold tracking-wide text-zinc-300 shadow-xl">
+            <span className="mt-3 rounded-full bg-[#1A1A1A]/95 border border-[#333333] px-3 py-1 text-xs font-semibold tracking-wide text-[#E5E5E5] shadow-xl">
               Locked Content
             </span>
           </div>
