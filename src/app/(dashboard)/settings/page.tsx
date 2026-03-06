@@ -241,7 +241,8 @@ export default function SettingsPage() {
         </DashboardCard>
 
         {/* Stripe Connect Card */}
-        <DashboardCard title="Payouts & Stripe" bodyClassName="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <DashboardCard title="Payouts & Stripe">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
             {dbUser?.stripeOnboarded ? (
               <div className="flex items-center gap-2 text-emerald-600 font-medium">
@@ -279,6 +280,7 @@ export default function SettingsPage() {
               </a>
             )}
           </Button>
+          </div>
         </DashboardCard>
 
       </div>

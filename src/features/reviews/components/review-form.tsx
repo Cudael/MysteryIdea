@@ -7,6 +7,8 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { createReview } from "@/features/reviews/actions";
 
+const RATING_LABELS = ["", "Poor", "Fair", "Good", "Very good", "Excellent"] as const;
+
 const MAX_COMMENT_LENGTH = 1000;
 
 interface ReviewFormProps {
@@ -68,14 +70,13 @@ export function ReviewForm({ ideaId }: ReviewFormProps) {
         ))}
         {rating > 0 && (
           <span className="ml-2 text-sm text-muted-foreground">
-            {["", "Poor", "Fair", "Good", "Very good", "Excellent"][rating]}
+            {RATING_LABELS[rating]}
           </span>
         )}
       </div>
-      {ratingError && (
-        <p className="mb-3 text-xs text-destructive">Please select a rating before submitting.</p>
-      )}
-      {!ratingError && <div className="mb-3" />}
+      <p className={ratingError ? "mb-3 text-xs text-destructive" : "invisible mb-3 text-xs"}>
+        Please select a rating before submitting.
+      </p>
       <div className="relative">
         <Textarea
           placeholder="Share your thoughts (optional)"
