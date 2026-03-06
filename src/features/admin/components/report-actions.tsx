@@ -9,9 +9,11 @@ import { Button } from "@/components/ui/button";
 export function ReportActions({
   reportId,
   currentStatus,
+  ideaPublished,
 }: {
   reportId: string;
   currentStatus: ReportStatus;
+  ideaPublished?: boolean;
 }) {
   const [loading, setLoading] = useState(false);
 
@@ -55,15 +57,17 @@ export function ReportActions({
       >
         Mark Reviewed
       </Button>
-      <Button
-        size="sm"
-        variant="destructive"
-        disabled={loading}
-        onClick={() => handleAction("ACTION_TAKEN", true)}
-        className="h-8 text-xs"
-      >
-        Take Action
-      </Button>
+      {ideaPublished !== false && (
+        <Button
+          size="sm"
+          variant="destructive"
+          disabled={loading}
+          onClick={() => handleAction("ACTION_TAKEN", true)}
+          className="h-8 text-xs"
+        >
+          Unpublish
+        </Button>
+      )}
     </div>
   );
 }

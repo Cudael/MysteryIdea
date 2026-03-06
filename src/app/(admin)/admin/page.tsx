@@ -9,6 +9,10 @@ import {
   BarChart3,
   Shield,
   AlertCircle,
+  RefreshCw,
+  ShoppingCart,
+  Repeat2,
+  Tag,
 } from "lucide-react";
 import { getPlatformStats } from "@/features/admin/actions";
 import { formatPrice } from "@/lib/utils";
@@ -19,6 +23,9 @@ export const metadata: Metadata = {
 
 export default async function AdminPage() {
   const stats = await getPlatformStats();
+
+  const highRefundRate = stats.refundRate >= 10;
+  const staleReports = stats.pendingReports > 5;
 
   return (
     <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
@@ -31,30 +38,35 @@ export default async function AdminPage() {
             Admin Dashboard
           </h1>
           <p className="mt-1 text-[15px] text-[#1A1A1A]/60">
-            Platform overview and key metrics.
+            Platform overview and key operational metrics.
           </p>
         </div>
       </div>
 
       {/* Alerts */}
-      {(stats.pendingReports > 0 || stats.pendingRefunds > 0) && (
-        <div className="mb-6 flex flex-col gap-3 sm:flex-row">
+      {(stats.pendingReports > 0 || stats.pendingRefunds > 0 || highRefundRate) && (
+        <div className="mb-6 flex flex-col gap-3 sm:flex-row flex-wrap">
           {stats.pendingReports > 0 && (
             <Link
-              href="/admin/reports"
-              className="flex items-center gap-3 rounded-[12px] border border-orange-200 bg-orange-50 p-4 text-orange-800 transition-colors hover:bg-orange-100 flex-1"
+              href="/admin/reports?status=PENDING"
+              className={`flex items-center gap-3 rounded-[12px] border p-4 transition-colors flex-1 min-w-[200px] ${
+                staleReports
+                  ? "border-red-300 bg-red-50 text-red-800 hover:bg-red-100"
+                  : "border-orange-200 bg-orange-50 text-orange-800 hover:bg-orange-100"
+              }`}
             >
-              <AlertCircle className="h-5 w-5 shrink-0 text-orange-500" />
+              <AlertCircle className={`h-5 w-5 shrink-0 ${staleReports ? "text-red-500" : "text-orange-500"}`} />
               <span className="text-sm font-medium">
                 {stats.pendingReports} pending report
                 {stats.pendingReports !== 1 ? "s" : ""} need review
+                {staleReports ? " — high volume" : ""}
               </span>
             </Link>
           )}
           {stats.pendingRefunds > 0 && (
             <Link
-              href="/admin/refunds"
-              className="flex items-center gap-3 rounded-[12px] border border-yellow-200 bg-yellow-50 p-4 text-yellow-800 transition-colors hover:bg-yellow-100 flex-1"
+              href="/admin/refunds?status=PENDING"
+              className="flex items-center gap-3 rounded-[12px] border border-yellow-200 bg-yellow-50 p-4 text-yellow-800 transition-colors hover:bg-yellow-100 flex-1 min-w-[200px]"
             >
               <AlertCircle className="h-5 w-5 shrink-0 text-yellow-500" />
               <span className="text-sm font-medium">
@@ -63,10 +75,18 @@ export default async function AdminPage() {
               </span>
             </Link>
           )}
+          {highRefundRate && (
+            <div className="flex items-center gap-3 rounded-[12px] border border-red-300 bg-red-50 p-4 text-red-800 flex-1 min-w-[200px]">
+              <AlertCircle className="h-5 w-5 shrink-0 text-red-500" />
+              <span className="text-sm font-medium">
+                Elevated refund rate: {stats.refundRate}% — review idea quality
+              </span>
+            </div>
+          )}
         </div>
       )}
 
-      {/* Stats Grid */}
+      {/* Primary KPI Grid */}
       <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
         <StatCard
           label="Total Users"
@@ -75,16 +95,11 @@ export default async function AdminPage() {
           href="/admin/users"
         />
         <StatCard
-          label="Total Creators"
-          value={stats.totalCreators.toLocaleString()}
+          label="Active Creators"
+          value={stats.activeCreatorCount.toLocaleString()}
           icon={TrendingUp}
           href="/admin/users?role=CREATOR"
-        />
-        <StatCard
-          label="Total Ideas"
-          value={stats.totalIdeas.toLocaleString()}
-          icon={Lightbulb}
-          href="/admin/ideas"
+          accent
         />
         <StatCard
           label="Published Ideas"
@@ -94,13 +109,13 @@ export default async function AdminPage() {
           accent
         />
         <StatCard
-          label="Total Purchases"
-          value={stats.totalPurchases.toLocaleString()}
-          icon={BarChart3}
-          href="/admin/refunds"
+          label="Total Ideas"
+          value={stats.totalIdeas.toLocaleString()}
+          icon={Lightbulb}
+          href="/admin/ideas"
         />
         <StatCard
-          label="Total Revenue"
+          label="GMV (All Time)"
           value={formatPrice(stats.totalRevenue)}
           icon={DollarSign}
           href="/admin/refunds"
@@ -113,16 +128,83 @@ export default async function AdminPage() {
           href="/admin/refunds"
         />
         <StatCard
+          label="Sales (Last 30d)"
+          value={stats.recentPurchasesCount.toLocaleString()}
+          icon={ShoppingCart}
+          href="/admin/refunds"
+          accent
+        />
+        <StatCard
+          label="Total Purchases"
+          value={stats.totalPurchases.toLocaleString()}
+          icon={BarChart3}
+          href="/admin/refunds"
+        />
+        <StatCard
+          label="Repeat Buyers"
+          value={stats.repeatBuyerCount.toLocaleString()}
+          icon={Repeat2}
+          href="/admin/users"
+        />
+        <StatCard
+          label="Refund Rate"
+          value={`${stats.refundRate}%`}
+          icon={RefreshCw}
+          href="/admin/refunds"
+          danger={highRefundRate}
+        />
+        <StatCard
           label="Pending Reports"
           value={stats.pendingReports.toLocaleString()}
           icon={Flag}
-          href="/admin/reports"
+          href="/admin/reports?status=PENDING"
           danger={stats.pendingReports > 0}
+        />
+        <StatCard
+          label="Pending Refunds"
+          value={stats.pendingRefunds.toLocaleString()}
+          icon={RefreshCw}
+          href="/admin/refunds?status=PENDING"
+          danger={stats.pendingRefunds > 0}
         />
       </div>
 
-      {/* Recent Activity */}
-      <div className="mt-10 grid grid-cols-1 gap-8 lg:grid-cols-2">
+      {/* Top Categories + Recent Activity */}
+      <div className="mt-10 grid grid-cols-1 gap-8 lg:grid-cols-3">
+        {/* Top Categories */}
+        <div className="rounded-[12px] border border-[#D9DCE3] bg-[#FFFFFF] shadow-[0_4px_20px_rgba(0,0,0,0.02)] overflow-hidden">
+          <div className="border-b border-[#D9DCE3] bg-[#F8F9FC] px-6 py-4 flex items-center gap-2">
+            <Tag className="h-4 w-4 text-[#1A1A1A]/40" />
+            <h2 className="text-[15px] font-semibold text-[#1A1A1A]">
+              Top Categories
+            </h2>
+          </div>
+          {stats.topCategories.length === 0 ? (
+            <p className="p-6 text-sm text-[#1A1A1A]/50">No category data yet.</p>
+          ) : (
+            <div className="divide-y divide-[#D9DCE3]">
+              {stats.topCategories.map((cat, i) => (
+                <div
+                  key={cat.category}
+                  className="flex items-center justify-between px-6 py-3"
+                >
+                  <div className="flex items-center gap-3">
+                    <span className="text-xs font-bold text-[#1A1A1A]/30 w-4">
+                      {i + 1}
+                    </span>
+                    <span className="text-sm font-medium text-[#1A1A1A] capitalize">
+                      {cat.category}
+                    </span>
+                  </div>
+                  <span className="text-xs font-semibold text-[#3A5FCD]">
+                    {cat.count} purchase{cat.count !== 1 ? "s" : ""}
+                  </span>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
         {/* Recent Purchases */}
         <div className="rounded-[12px] border border-[#D9DCE3] bg-[#FFFFFF] shadow-[0_4px_20px_rgba(0,0,0,0.02)] overflow-hidden">
           <div className="border-b border-[#D9DCE3] bg-[#F8F9FC] px-6 py-4">

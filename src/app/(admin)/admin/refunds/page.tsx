@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { DollarSign } from "lucide-react";
+import { DollarSign, Clock, ExternalLink } from "lucide-react";
 import { getRefundRequests } from "@/features/admin/actions";
 import { RefundActions } from "@/features/admin/components/refund-actions";
 import { formatPrice } from "@/lib/utils";
@@ -22,6 +22,10 @@ const STATUS_BADGE: Record<string, string> = {
   DENIED: "bg-red-50 text-red-700 border-red-200",
 };
 
+function daysSince(date: Date): number {
+  return Math.floor((Date.now() - new Date(date).getTime()) / (1000 * 60 * 60 * 24));
+}
+
 export default async function AdminRefundsPage({
   searchParams,
 }: {
@@ -42,7 +46,7 @@ export default async function AdminRefundsPage({
             Refunds
           </h1>
           <p className="mt-1 text-[15px] text-[#1A1A1A]/60">
-            Manage refund requests from buyers.
+            Manage refund requests from buyers. Review and respond within 3 business days.
           </p>
         </div>
       </div>
@@ -85,7 +89,7 @@ export default async function AdminRefundsPage({
                     Buyer
                   </th>
                   <th className="px-6 py-4 text-left font-semibold text-[#1A1A1A]/70">
-                    Idea
+                    Idea & Creator
                   </th>
                   <th className="px-6 py-4 text-left font-semibold text-[#1A1A1A]/70">
                     Amount
@@ -97,7 +101,7 @@ export default async function AdminRefundsPage({
                     Status
                   </th>
                   <th className="px-6 py-4 text-left font-semibold text-[#1A1A1A]/70">
-                    Date
+                    Age
                   </th>
                   <th className="px-6 py-4 text-right font-semibold text-[#1A1A1A]/70">
                     Actions
@@ -105,60 +109,78 @@ export default async function AdminRefundsPage({
                 </tr>
               </thead>
               <tbody className="divide-y divide-[#D9DCE3]">
-                {refunds.map((refund) => (
-                  <tr
-                    key={refund.id}
-                    className="transition-colors hover:bg-[#F5F6FA]"
-                  >
-                    <td className="px-6 py-4">
-                      <p className="font-medium text-[#1A1A1A]">
-                        {refund.purchase.buyer.name ?? "Anonymous"}
-                      </p>
-                      <p className="text-xs text-[#1A1A1A]/50">
-                        {refund.purchase.buyer.email}
-                      </p>
-                    </td>
-                    <td className="px-6 py-4">
-                      <p className="font-medium text-[#1A1A1A]">
-                        {refund.purchase.idea.title}
-                      </p>
-                    </td>
-                    <td className="px-6 py-4 font-medium text-[#3A5FCD]">
-                      {formatPrice(refund.purchase.amountInCents)}
-                    </td>
-                    <td className="px-6 py-4">
-                      <p
-                        className="max-w-[180px] truncate text-xs text-[#1A1A1A]/70"
-                        title={refund.reason}
-                      >
-                        {refund.reason}
-                      </p>
-                    </td>
-                    <td className="px-6 py-4">
-                      <span
-                        className={`inline-flex items-center rounded-[6px] border px-2.5 py-1 text-xs font-medium ${
-                          STATUS_BADGE[refund.status] ?? ""
-                        }`}
-                      >
-                        {refund.status.charAt(0) +
-                          refund.status.slice(1).toLowerCase()}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4 text-xs text-[#1A1A1A]/50">
-                      {new Date(refund.createdAt).toLocaleDateString("en-US", {
-                        month: "short",
-                        day: "numeric",
-                        year: "numeric",
-                      })}
-                    </td>
-                    <td className="px-6 py-4 text-right">
-                      <RefundActions
-                        refundId={refund.id}
-                        currentStatus={refund.status}
-                      />
-                    </td>
-                  </tr>
-                ))}
+                {refunds.map((refund) => {
+                  const age = daysSince(refund.createdAt);
+                  const overdue = refund.status === "PENDING" && age >= 3;
+                  return (
+                    <tr
+                      key={refund.id}
+                      className={`transition-colors hover:bg-[#F5F6FA] ${overdue ? "bg-yellow-50/40" : ""}`}
+                    >
+                      <td className="px-6 py-4">
+                        <p className="font-medium text-[#1A1A1A]">
+                          {refund.purchase.buyer.name ?? "Anonymous"}
+                        </p>
+                        <p className="text-xs text-[#1A1A1A]/50">
+                          {refund.purchase.buyer.email}
+                        </p>
+                      </td>
+                      <td className="px-6 py-4 max-w-[220px]">
+                        <div className="flex items-center gap-1.5">
+                          <p className="font-medium text-[#1A1A1A] truncate">
+                            {refund.purchase.idea.title}
+                          </p>
+                          <Link
+                            href={`/ideas/${refund.purchase.idea.id}`}
+                            className="text-[#3A5FCD] hover:text-[#6D7BE0] shrink-0"
+                          >
+                            <ExternalLink className="h-3.5 w-3.5" />
+                          </Link>
+                        </div>
+                        <p className="text-xs text-[#1A1A1A]/50">
+                          by{" "}
+                          {refund.purchase.idea.creator.name ??
+                            refund.purchase.idea.creator.email}
+                        </p>
+                      </td>
+                      <td className="px-6 py-4 font-medium text-[#3A5FCD]">
+                        {formatPrice(refund.purchase.amountInCents)}
+                      </td>
+                      <td className="px-6 py-4 max-w-[200px]">
+                        <p
+                          className="text-xs text-[#1A1A1A]/70 line-clamp-3"
+                          title={refund.reason}
+                        >
+                          {refund.reason}
+                        </p>
+                      </td>
+                      <td className="px-6 py-4">
+                        <span
+                          className={`inline-flex items-center rounded-[6px] border px-2.5 py-1 text-xs font-medium ${
+                            STATUS_BADGE[refund.status] ?? ""
+                          }`}
+                        >
+                          {refund.status.charAt(0) +
+                            refund.status.slice(1).toLowerCase()}
+                        </span>
+                      </td>
+                      <td className="px-6 py-4">
+                        <div className={`flex items-center gap-1 text-xs ${overdue ? "text-yellow-700 font-medium" : "text-[#1A1A1A]/50"}`}>
+                          {overdue && <Clock className="h-3.5 w-3.5" />}
+                          <span>
+                            {age === 0 ? "Today" : `${age}d ago`}
+                          </span>
+                        </div>
+                      </td>
+                      <td className="px-6 py-4 text-right">
+                        <RefundActions
+                          refundId={refund.id}
+                          currentStatus={refund.status}
+                        />
+                      </td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </div>
