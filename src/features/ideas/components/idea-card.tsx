@@ -20,7 +20,7 @@ export function IdeaCard({
   category,
   creatorId,
   creatorName,
-  _creatorAvatarUrl,
+  creatorAvatarUrl,
   purchaseCount,
   isOwner = false,
   isPurchased = false,
@@ -28,6 +28,7 @@ export function IdeaCard({
   isAuthenticated = false,
 }: IdeaCardProps) {
   const [imageError, setImageError] = useState(false);
+  const [avatarError, setAvatarError] = useState(false);
 
   const normalizedImageUrl = useMemo(() => {
     if (typeof teaserImageUrl !== "string") return null;
@@ -42,7 +43,28 @@ export function IdeaCard({
     return null;
   }, [teaserImageUrl]);
 
+  const normalizedAvatarUrl = useMemo(() => {
+    if (typeof creatorAvatarUrl !== "string") return null;
+    const trimmed = creatorAvatarUrl.trim();
+    if (!trimmed) return null;
+    if (trimmed.startsWith("http://") || trimmed.startsWith("https://")) {
+      return trimmed;
+    }
+    return null;
+  }, [creatorAvatarUrl]);
+
   const hasImage = !!normalizedImageUrl && !imageError;
+  const hasAvatar = !!normalizedAvatarUrl && !avatarError;
+
+  const creatorInitials = useMemo(() => {
+    if (!creatorName) return "?";
+    return creatorName
+      .split(" ")
+      .filter((word) => word.length > 0)
+      .slice(0, 2)
+      .map((word) => word[0]!.toUpperCase())
+      .join("");
+  }, [creatorName]);
 
   return (
     <div className="flex h-full flex-col overflow-hidden rounded-xl border border-border bg-card text-card-foreground shadow-sm transition-shadow hover:shadow-md">
@@ -141,6 +163,20 @@ export function IdeaCard({
 
             {creatorName && (
               <div className="mt-0.5 flex items-center gap-1.5">
+                {hasAvatar ? (
+                  <Image
+                    src={normalizedAvatarUrl!}
+                    alt={creatorName}
+                    width={16}
+                    height={16}
+                    className="h-4 w-4 rounded-full object-cover"
+                    onError={() => setAvatarError(true)}
+                  />
+                ) : (
+                  <span className="flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-muted text-[8px] font-bold text-muted-foreground">
+                    {creatorInitials}
+                  </span>
+                )}
                 {creatorId ? (
                   <Link
                     href={`/creators/${creatorId}`}
