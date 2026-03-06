@@ -6,6 +6,10 @@ import { ConfettiEffect } from "@/components/shared/confetti-effect";
 import { stripe } from "@/lib/stripe";
 import { formatPrice } from "@/lib/utils";
 
+// Prevent static prerendering: this page calls stripe.checkout.sessions.retrieve()
+// and uses Clerk auth — both require runtime credentials unavailable at build time.
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   title: "Purchase Successful - MysteryMarket",
 };

@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { UploadButton } from "@/lib/uploadthing";
 import Image from "next/image";
-import { ImagePlus, Info, Lock, Eye, EyeOff } from "lucide-react";
+import { ImagePlus, Lock, Eye, EyeOff, Wallet } from "lucide-react";
 import { CATEGORIES } from "@/lib/constants";
 
 const ideaFormSchema = z.object({
@@ -119,15 +119,6 @@ export function IdeaForm({
         const msg = err.errors[0]?.message ?? "Validation error";
         setError(msg);
         toast.error(msg);
-      } else if (err instanceof Error && err.message === "STRIPE_NOT_CONNECTED") {
-        const msg = "Please connect your Stripe account before creating ideas.";
-        setError(msg);
-        toast.error(msg, {
-          action: {
-            label: "Connect Stripe",
-            onClick: () => router.push("/creator/connect"),
-          },
-        });
       } else if (err instanceof Error) {
         setError(err.message);
         toast.error(err.message);
@@ -140,9 +131,6 @@ export function IdeaForm({
     }
   }
 
-  const isStripeError =
-    error === "Please connect your Stripe account before creating ideas.";
-
   const inputClasses =
     "w-full rounded-[8px] border border-[#D9DCE3] bg-[#F8F9FC] px-4 py-3 text-[15px] text-[#1A1A1A] placeholder:text-[#1A1A1A]/40 outline-none transition-all focus:border-[#3A5FCD] focus:bg-[#FFFFFF] focus:ring-2 focus:ring-[#3A5FCD]/20 shadow-[0_2px_8px_rgba(0,0,0,0.02)]";
 
@@ -150,25 +138,23 @@ export function IdeaForm({
 
   return (
     <form onSubmit={handleSubmit} className="space-y-8">
-      {/* Error banners */}
-      {error && !isStripeError && (
-        <div className="rounded-[8px] border border-red-200 bg-red-50 px-4 py-3 text-[14px] text-red-700">
-          {error}
+      {/* Wallet-first info banner — only shown in create mode */}
+      {isCreateMode && (
+        <div className="flex items-start gap-3 rounded-[8px] border border-[#3A5FCD]/20 bg-[#3A5FCD]/5 px-4 py-3 text-[14px] text-[#3A5FCD]">
+          <Wallet className="mt-0.5 h-4 w-4 shrink-0" />
+          <p>
+            No payout setup required to publish.{" "}
+            <span className="text-[#1A1A1A]/70">
+              Earnings go straight to your in-app wallet. Connect Stripe later when you're ready to withdraw.
+            </span>
+          </p>
         </div>
       )}
-      {isStripeError && (
-        <div className="flex items-start gap-3 rounded-[8px] border border-amber-200 bg-amber-50 px-4 py-3 text-[14px] text-amber-800">
-          <Info className="mt-0.5 h-4 w-4 shrink-0" />
-          <div>
-            {error}{" "}
-            <button
-              type="button"
-              className="font-semibold underline"
-              onClick={() => router.push("/creator/connect")}
-            >
-              Connect Stripe
-            </button>
-          </div>
+
+      {/* Error banner */}
+      {error && (
+        <div className="rounded-[8px] border border-red-200 bg-red-50 px-4 py-3 text-[14px] text-red-700">
+          {error}
         </div>
       )}
 
