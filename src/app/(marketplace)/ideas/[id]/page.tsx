@@ -46,7 +46,6 @@ export default async function IdeaDetailPage({
     include: {
       creator: { select: { id: true, name: true, avatarUrl: true, createdAt: true } },
       _count: { select: { purchases: true, reviews: true } },
-      reviews: { select: { rating: true }, take: 200 },
     },
   });
 
@@ -88,33 +87,26 @@ export default async function IdeaDetailPage({
   const exclusiveClaimed =
     idea.unlockType === "EXCLUSIVE" && idea._count.purchases > 0 && !isPurchased;
 
-  // Fetch wallet balance and creator stats in parallel
-  let walletBalance: number | null = null;
-  let creatorPublishedCount = 0;
-  let creatorTotalSales = 0;
+  // Fetch wallet balance, creator stats, and review aggregate in parallel
+  const [
+    creatorPublishedCount,
+    creatorTotalSales,
+    reviewAggregate,
+    wallet,
+  ] = await Promise.all([
+    prisma.idea.count({ where: { creatorId: idea.creatorId, published: true } }),
+    prisma.purchase.count({ where: { idea: { creatorId: idea.creatorId }, status: "COMPLETED" } }),
+    prisma.review.aggregate({ where: { ideaId: id }, _avg: { rating: true } }),
+    currentUser && !isOwner
+      ? prisma.wallet.findUnique({
+          where: { userId: currentUser.id },
+          select: { balanceInCents: true },
+        })
+      : Promise.resolve(null),
+  ]);
 
-  const parallelFetches: Promise<unknown>[] = [
-    prisma.idea.count({ where: { creatorId: idea.creatorId, published: true } })
-      .then((c) => { creatorPublishedCount = c; }),
-    prisma.purchase.count({ where: { idea: { creatorId: idea.creatorId }, status: "COMPLETED" } })
-      .then((c) => { creatorTotalSales = c; }),
-  ];
-
-  if (currentUser && !isOwner) {
-    parallelFetches.push(
-      prisma.wallet.findUnique({
-        where: { userId: currentUser.id },
-        select: { balanceInCents: true },
-      }).then((w) => { walletBalance = w?.balanceInCents ?? null; })
-    );
-  }
-
-  await Promise.all(parallelFetches);
-
-  // Compute average rating for this idea
-  const avgRating = idea.reviews.length > 0
-    ? idea.reviews.reduce((sum, r) => sum + r.rating, 0) / idea.reviews.length
-    : null;
+  const walletBalance = wallet?.balanceInCents ?? null;
+  const avgRating = reviewAggregate._avg.rating;
 
   const showContent = isOwner || isPurchased;
 

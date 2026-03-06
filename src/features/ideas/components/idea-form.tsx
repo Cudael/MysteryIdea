@@ -99,9 +99,9 @@ export function IdeaForm({
         hint: "Helps buyers discover your idea",
       },
       {
-        label: "Reasonable price",
-        met: !isNaN(price) && price >= 0.99 && price <= 99,
-        hint: "$1–$99 is the sweet spot for conversions",
+        label: "Price is set",
+        met: !isNaN(price) && price >= 0.99 && price <= 1000,
+        hint: "Set a price between $0.99 and $1,000",
       },
     ];
   }, [title, teaserText, teaserImageUrl, hiddenContent, category, priceStr]);
