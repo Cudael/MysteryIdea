@@ -3,7 +3,7 @@
 import { auth } from "@clerk/nextjs/server";
 import { revalidatePath } from "next/cache";
 import prisma from "@/lib/prisma";
-import { ReportStatus, Role, Prisma } from "@prisma/client";
+import { ReportStatus, ReportReason, Role, Prisma } from "@prisma/client";
 
 export async function requireAdmin() {
   const { userId } = await auth();
@@ -32,16 +32,24 @@ export async function getIsAdmin(): Promise<boolean> {
 export async function getPlatformStats() {
   await requireAdmin();
 
+  const thirtyDaysAgo = new Date();
+  thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+
   const [
     totalUsers,
     totalCreators,
     totalIdeas,
     publishedIdeas,
     purchaseStats,
+    refundedCount,
     pendingReports,
     pendingRefunds,
+    recentPurchasesCount,
     recentPurchases,
     recentUsers,
+    repeatBuyerRows,
+    activeCreatorRows,
+    topCategoryRows,
   ] = await Promise.all([
     prisma.user.count(),
     prisma.user.count({ where: { role: { in: ["CREATOR", "ADMIN"] } } }),
@@ -52,8 +60,12 @@ export async function getPlatformStats() {
       _sum: { amountInCents: true, platformFeeInCents: true },
       _count: true,
     }),
+    prisma.purchase.count({ where: { status: "REFUNDED" } }),
     prisma.report.count({ where: { status: "PENDING" } }),
     prisma.refundRequest.count({ where: { status: "PENDING" } }),
+    prisma.purchase.count({
+      where: { status: "COMPLETED", createdAt: { gte: thirtyDaysAgo } },
+    }),
     prisma.purchase.findMany({
       where: { status: "COMPLETED" },
       orderBy: { createdAt: "desc" },
@@ -68,7 +80,35 @@ export async function getPlatformStats() {
       take: 5,
       select: { id: true, name: true, email: true, createdAt: true, role: true },
     }),
+    prisma.purchase.groupBy({
+      by: ["buyerId"],
+      where: { status: "COMPLETED" },
+      having: { buyerId: { _count: { gt: 1 } } },
+    }),
+    prisma.purchase.groupBy({
+      by: ["ideaId"],
+      where: { status: "COMPLETED" },
+      _count: { ideaId: true },
+    }),
+    prisma.idea.groupBy({
+      by: ["category"],
+      where: { category: { not: null }, purchases: { some: { status: "COMPLETED" } } },
+      _count: { id: true },
+      orderBy: { _count: { id: "desc" } },
+      take: 5,
+    }),
   ]);
+
+  const totalCompleted = purchaseStats._count;
+  const refundRate =
+    totalCompleted + refundedCount > 0
+      ? Math.round((refundedCount / (totalCompleted + refundedCount)) * 1000) / 10
+      : 0;
+
+  const topCategories = topCategoryRows.map((r) => ({
+    category: r.category ?? "Uncategorized",
+    count: r._count.id,
+  }));
 
   return {
     totalUsers,
@@ -80,16 +120,22 @@ export async function getPlatformStats() {
     platformFeesEarned: purchaseStats._sum.platformFeeInCents ?? 0,
     pendingReports,
     pendingRefunds,
+    refundRate,
+    recentPurchasesCount,
+    repeatBuyerCount: repeatBuyerRows.length,
+    activeCreatorCount: activeCreatorRows.length,
+    topCategories,
     recentPurchases,
     recentUsers,
   };
 }
 
-export async function getReports(status?: string) {
+export async function getReports(status?: string, reason?: string) {
   await requireAdmin();
 
-  const where =
-    status && status !== "ALL" ? { status: status as ReportStatus } : undefined;
+  const where: Prisma.ReportWhereInput = {};
+  if (status && status !== "ALL") where.status = status as ReportStatus;
+  if (reason && reason !== "ALL") where.reason = reason as ReportReason;
 
   return prisma.report.findMany({
     where,
@@ -101,7 +147,10 @@ export async function getReports(status?: string) {
           id: true,
           title: true,
           published: true,
+          priceInCents: true,
+          category: true,
           creator: { select: { id: true, name: true, email: true } },
+          _count: { select: { reports: true, purchases: true } },
         },
       },
     },
@@ -153,7 +202,14 @@ export async function getRefundRequests(status?: string) {
       purchase: {
         include: {
           buyer: { select: { id: true, name: true, email: true } },
-          idea: { select: { id: true, title: true, creatorId: true } },
+          idea: {
+            select: {
+              id: true,
+              title: true,
+              creatorId: true,
+              creator: { select: { id: true, name: true, email: true } },
+            },
+          },
         },
       },
     },
