@@ -1,5 +1,6 @@
 import { Suspense } from "react";
 import type { Metadata } from "next";
+import Link from "next/link";
 import { auth } from "@clerk/nextjs/server";
 import { IdeaCard } from "@/features/ideas/components/idea-card";
 import { IdeaFilters } from "@/features/ideas/components/idea-filters-client";
@@ -30,7 +31,7 @@ export default async function IdeasPage({ searchParams }: IdeasPageProps) {
   const search = params?.search ?? "";
   const category = params?.category ?? "";
   const unlockType = params?.unlockType ?? "";
-  const sortBy = params?.sortBy ?? "";
+  const sortBy = params?.sortBy ?? "newest";
   const page = Math.max(1, parseInt(params?.page ?? "1", 10));
 
   const where = {
@@ -44,40 +45,85 @@ export default async function IdeasPage({ searchParams }: IdeasPageProps) {
       : {}),
   };
 
+  const isBestRated = sortBy === "best-rated";
+
   const orderBy =
     sortBy === "price-low"
       ? { priceInCents: "asc" as const }
       : sortBy === "price-high"
         ? { priceInCents: "desc" as const }
-        : { createdAt: "desc" as const };
+        : sortBy === "most-purchased"
+          ? { purchases: { _count: "desc" as const } }
+          : { createdAt: "desc" as const };
 
-  // Fetch ideas + bookmark IDs for authenticated user in parallel
-  const [ideas, total, bookmarkedIdeaIds] = await Promise.all([
-    prisma.idea.findMany({
-      where,
-      include: {
-        creator: { select: { id: true, name: true, avatarUrl: true } },
-        _count: { select: { purchases: true } },
-      },
-      orderBy,
-      skip: (page - 1) * ITEMS_PER_PAGE,
-      take: ITEMS_PER_PAGE,
-    }),
-    prisma.idea.count({ where }),
-    clerkId
-      ? prisma.bookmark
-          .findMany({
-            where: { user: { clerkId } },
-            select: { ideaId: true },
-          })
-          .then((bs) => new Set(bs.map((b) => b.ideaId)))
-      : Promise.resolve(new Set<string>()),
-  ]);
+  const defaultInclude = {
+    creator: { select: { id: true, name: true, avatarUrl: true } },
+    _count: { select: { purchases: true } },
+  } as const;
 
-  const sortedIdeas =
-    sortBy === "most-purchased"
-      ? [...ideas].sort((a, b) => b._count.purchases - a._count.purchases)
-      : ideas;
+  // For best-rated, use groupBy on reviews to get DB-level average-rating sort,
+  // then fetch matching ideas in that order (ideas with no reviews appear last).
+  let sortedIdeas: Awaited<ReturnType<typeof prisma.idea.findMany<{ include: typeof defaultInclude }>>>;
+  let total: number;
+  let bookmarkedIdeaIds: Set<string>;
+
+  if (isBestRated) {
+    // Get average ratings for all reviewed ideas matching the filter
+    const ratingGroups = await prisma.review.groupBy({
+      by: ["ideaId"],
+      where: { idea: where },
+      _avg: { rating: true },
+      orderBy: { _avg: { rating: "desc" } },
+    });
+
+    const ratedIdeaIds = ratingGroups.map((g) => g.ideaId);
+    const ratingMap = new Map(ratingGroups.map((g) => [g.ideaId, g._avg.rating ?? 0]));
+
+    // Fetch all matching ideas (rated + unrated), get count, and bookmarks in parallel
+    const [allIdeas, countResult, bookmarks] = await Promise.all([
+      prisma.idea.findMany({
+        where,
+        include: defaultInclude,
+        orderBy: { createdAt: "desc" },
+      }),
+      prisma.idea.count({ where }),
+      clerkId
+        ? prisma.bookmark
+            .findMany({ where: { user: { clerkId } }, select: { ideaId: true } })
+            .then((bs) => new Set(bs.map((b) => b.ideaId)))
+        : Promise.resolve(new Set<string>()),
+    ]);
+
+    total = countResult;
+    bookmarkedIdeaIds = bookmarks;
+
+    // Sort: rated ideas by avg rating desc, then unrated ideas by createdAt desc
+    const ratedIdeasSorted = ratedIdeaIds
+      .map((rId) => allIdeas.find((i) => i.id === rId))
+      .filter((i): i is (typeof allIdeas)[0] => i !== undefined);
+    const ideasWithNoRating = allIdeas.filter((i) => !ratingMap.has(i.id));
+    const allSorted = [...ratedIdeasSorted, ...ideasWithNoRating];
+    sortedIdeas = allSorted.slice((page - 1) * ITEMS_PER_PAGE, page * ITEMS_PER_PAGE);
+  } else {
+    const [rawIdeas, countResult, bookmarks] = await Promise.all([
+      prisma.idea.findMany({
+        where,
+        include: defaultInclude,
+        orderBy,
+        skip: (page - 1) * ITEMS_PER_PAGE,
+        take: ITEMS_PER_PAGE,
+      }),
+      prisma.idea.count({ where }),
+      clerkId
+        ? prisma.bookmark
+            .findMany({ where: { user: { clerkId } }, select: { ideaId: true } })
+            .then((bs) => new Set(bs.map((b) => b.ideaId)))
+        : Promise.resolve(new Set<string>()),
+    ]);
+    sortedIdeas = rawIdeas;
+    total = countResult;
+    bookmarkedIdeaIds = bookmarks;
+  }
 
   const totalPages = Math.ceil(total / ITEMS_PER_PAGE);
 
@@ -110,6 +156,14 @@ export default async function IdeasPage({ searchParams }: IdeasPageProps) {
             <p className="mt-2 text-[15px] text-[#1A1A1A]/60">
               Try adjusting your filters or search terms to find what you&apos;re looking for.
             </p>
+            {(search || category || unlockType) && (
+              <Link
+                href="/ideas"
+                className="mt-4 text-[14px] font-medium text-[#3A5FCD] underline underline-offset-2 hover:text-[#6D7BE0]"
+              >
+                Clear all filters
+              </Link>
+            )}
           </div>
         ) : (
           <>
