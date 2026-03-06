@@ -1,73 +1,98 @@
 import Link from "next/link";
-import { ArrowRight, Lock, Sparkles } from "lucide-react";
+import { ArrowRight, ShieldCheck, Sparkles, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export function Hero() {
   return (
-    <section className="relative overflow-hidden bg-background py-20 sm:py-32 lg:pb-40">
-      {/* Subtle Professional Grid Background */}
-      <div className="absolute inset-0 z-0 opacity-[0.4] bg-[linear-gradient(to_right,rgba(255,255,255,0.04)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.04)_1px,transparent_1px)] bg-[size:32px_32px]"></div>
+    <section className="relative overflow-hidden bg-[#F8F9FC]">
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(58,95,205,0.10),transparent_45%)]" />
+      <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(58,95,205,0.04)_1px,transparent_1px),linear-gradient(to_bottom,rgba(58,95,205,0.04)_1px,transparent_1px)] bg-[size:32px_32px]" />
 
-      <div className="container relative z-10 mx-auto px-6 lg:px-8">
-        <div className="grid grid-cols-1 gap-16 lg:grid-cols-2 lg:gap-8 items-center">
-          
-          {/* Left: Copy & Actions */}
-          <div className="max-w-2xl text-center lg:text-left">
-            <h1 className="text-4xl font-bold tracking-tight text-foreground sm:text-5xl xl:text-6xl">
-              High-value insights, <br className="hidden lg:block" />
-              <span className="text-[#3A5FCD]">locked and loaded.</span>
+      <div className="container relative mx-auto max-w-[1400px] px-6 py-20 lg:px-8 lg:py-28">
+        <div className="grid items-center gap-14 lg:grid-cols-[1.1fr_0.9fr]">
+          <div className="max-w-3xl">
+            <div className="inline-flex items-center gap-2 rounded-full border border-[#D9DCE3] bg-white px-4 py-2 text-sm font-medium text-[#1A1A1A]/70 shadow-[0_2px_10px_rgba(0,0,0,0.03)]">
+              <Sparkles className="h-4 w-4 text-[#3A5FCD]" />
+              Premium idea marketplace for serious buyers and creators
+            </div>
+
+            <h1 className="mt-6 text-[42px] font-bold tracking-[-0.03em] text-[#111827] sm:text-[56px] sm:leading-[1.02]">
+              Buy and sell
+              <span className="text-[#3A5FCD]"> high-value ideas </span>
+              with clarity, exclusivity, and trust.
             </h1>
 
-            <p className="mt-6 text-[18px] leading-[1.6] text-muted-foreground sm:text-[20px]">
-              The exclusive marketplace for top-tier professionals. Post your hidden ideas, set your own terms, and monetize your brilliance every time a buyer unlocks it.
+            <p className="mt-6 max-w-2xl text-[18px] leading-8 text-[#1A1A1A]/68 sm:text-[20px]">
+              MysteryMarket helps experts monetize hard-won insights while giving buyers
+              access to premium opportunities, frameworks, and concepts they won’t find in public feeds.
             </p>
 
-            <div className="mt-10 flex flex-col items-center gap-4 sm:flex-row lg:justify-start">
-              <Button asChild size="lg" className="w-full sm:w-auto h-12 px-8 text-[16px]">
+            <div className="mt-10 flex flex-col gap-4 sm:flex-row">
+              <Button asChild size="lg" className="h-12 rounded-[10px] bg-[#3A5FCD] px-7 text-[15px] font-semibold hover:bg-[#2D4FB0]">
                 <Link href="/ideas">
-                  Explore Marketplace
-                  <ArrowRight className="h-4 w-4 ml-2" />
+                  Explore ideas
+                  <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
               </Button>
-              <Button asChild variant="outline" size="lg" className="w-full sm:w-auto h-12 px-8 text-[16px]">
-                <Link href="/sign-up">Start Selling</Link>
+              <Button asChild variant="outline" size="lg" className="h-12 rounded-[10px] border-[#D9DCE3] bg-white px-7 text-[15px] font-semibold text-[#1A1A1A] hover:bg-[#F5F6FA]">
+                <Link href="/sign-up">Start selling</Link>
               </Button>
+            </div>
+
+            <div className="mt-8 flex flex-col gap-3 text-sm text-[#1A1A1A]/62 sm:flex-row sm:flex-wrap sm:gap-6">
+              <div className="flex items-center gap-2">
+                <ShieldCheck className="h-4 w-4 text-[#3A5FCD]" />
+                Secure payments
+              </div>
+              <div className="flex items-center gap-2">
+                <Users className="h-4 w-4 text-[#3A5FCD]" />
+                Professional creator community
+              </div>
+              <div className="flex items-center gap-2">
+                <Sparkles className="h-4 w-4 text-[#3A5FCD]" />
+                Curated premium positioning
+              </div>
             </div>
           </div>
 
-          {/* Right: Creative "Mystery" Visual Context */}
-          <div className="relative mx-auto w-full max-w-md lg:max-w-none h-[400px] hidden md:block">
-            {/* Background glowing accent (Golden Hint) */}
-            <div className="absolute top-1/2 left-1/2 -z-10 h-64 w-64 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#E8C26A]/20 blur-[80px]"></div>
-
-            {/* Unlocked Document (Background) */}
-            <div className="absolute right-[10%] top-[10%] w-72 rotate-[6deg] rounded-[12px] border border-border bg-card p-6 shadow-[0_8px_30px_rgba(0,0,0,0.12)] transition-transform hover:rotate-[4deg]">
-              <div className="mb-4 flex items-center justify-between border-b border-border pb-4">
-                <div className="flex h-10 w-10 items-center justify-center rounded-[8px] bg-[#E8C26A]/15 text-[#E8C26A]">
-                  <Sparkles className="h-5 w-5" />
+          <div className="relative">
+            <div className="rounded-[24px] border border-[#D9DCE3] bg-white p-6 shadow-[0_24px_80px_rgba(17,24,39,0.10)]">
+              <div className="rounded-[18px] border border-[#E6EAF2] bg-[#F8F9FC] p-5">
+                <div className="flex items-center justify-between">
+                  <span className="rounded-full bg-[#3A5FCD]/10 px-3 py-1 text-xs font-semibold text-[#3A5FCD]">
+                    Featured insight
+                  </span>
+                  <span className="text-sm font-medium text-[#1A1A1A]/45">Exclusive</span>
                 </div>
-                <span className="text-sm font-semibold text-foreground">$50.00</span>
-              </div>
-              <div className="space-y-3">
-                <div className="h-3 w-3/4 rounded bg-foreground/10"></div>
-                <div className="h-3 w-full rounded bg-foreground/10"></div>
-                <div className="h-3 w-5/6 rounded bg-foreground/10"></div>
-              </div>
-            </div>
 
-            {/* Locked Document (Foreground) */}
-            <div className="absolute left-[10%] top-[25%] w-80 -rotate-[3deg] rounded-[12px] border border-[#3A5FCD]/20 bg-card p-1 shadow-[0_12px_40px_rgba(58,95,205,0.08)] backdrop-blur-sm transition-transform hover:-rotate-[1deg] z-20">
-              <div className="relative flex h-48 w-full flex-col items-center justify-center rounded-[8px] bg-muted border border-border/50 overflow-hidden">
-                <div className="absolute inset-0 bg-[linear-gradient(transparent_1px,_rgba(0,0,0,0.2)_1px)] bg-[size:100%_4px] opacity-50 backdrop-blur-[2px]"></div>
-                <div className="z-10 flex h-14 w-14 items-center justify-center rounded-full bg-[#3A5FCD] shadow-[0_4px_12px_rgba(58,95,205,0.3)]">
-                  <Lock className="h-6 w-6 text-[#FFFFFF]" />
-                </div>
-                <p className="z-10 mt-4 text-[14px] font-semibold tracking-wide text-foreground">
-                  HIDDEN INSIGHT
+                <h3 className="mt-5 text-xl font-semibold text-[#111827]">
+                  Undervalued B2B workflow ideas hidden in niche service markets
+                </h3>
+                <p className="mt-3 text-sm leading-6 text-[#1A1A1A]/65">
+                  A premium concept with buyer-ready angles, monetization logic, and positioning opportunities.
                 </p>
+
+                <div className="mt-6 rounded-[14px] border border-dashed border-[#C8D2EA] bg-white p-4">
+                  <p className="text-sm font-medium text-[#1A1A1A]/70">Teaser preview</p>
+                  <div className="mt-3 space-y-2">
+                    <div className="h-2 rounded bg-[#E8ECF5]" />
+                    <div className="h-2 w-11/12 rounded bg-[#E8ECF5]" />
+                    <div className="h-2 w-9/12 rounded bg-[#E8ECF5]" />
+                  </div>
+                </div>
+
+                <div className="mt-6 flex items-center justify-between border-t border-[#E6EAF2] pt-4">
+                  <div>
+                    <p className="text-xs uppercase tracking-[0.18em] text-[#1A1A1A]/40">Price</p>
+                    <p className="mt-1 text-lg font-semibold text-[#111827]">$49.00</p>
+                  </div>
+                  <div>
+                    <p className="text-xs uppercase tracking-[0.18em] text-[#1A1A1A]/40">Unlocks</p>
+                    <p className="mt-1 text-lg font-semibold text-[#111827]">128</p>
+                  </div>
+                </div>
               </div>
             </div>
-
           </div>
         </div>
       </div>
