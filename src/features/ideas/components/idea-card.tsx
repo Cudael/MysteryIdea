@@ -3,7 +3,7 @@
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { Lock, Unlock, Users, Sparkles } from "lucide-react";
+import { Unlock, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { BookmarkButton } from "@/features/bookmarks/components/bookmark-button";
 import { formatPrice } from "@/lib/utils";
@@ -29,8 +29,6 @@ export function IdeaCard({
 }: IdeaCardProps) {
   const [imageError, setImageError] = useState(false);
 
-  const isLocked = !isOwner && !isPurchased;
-
   const normalizedImageUrl = useMemo(() => {
     if (typeof teaserImageUrl !== "string") return null;
     const trimmed = teaserImageUrl.trim();
@@ -49,66 +47,38 @@ export function IdeaCard({
   return (
     <div className="flex h-full flex-col overflow-hidden rounded-xl border border-border bg-card text-card-foreground shadow-sm transition-shadow hover:shadow-md">
       {/* Header */}
-      <div className="relative h-48 w-full shrink-0 overflow-hidden bg-[#14151B]">
-        {/* Base placeholder */}
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(90,105,140,0.22),transparent_38%),linear-gradient(135deg,#1B1D25_0%,#232632_45%,#14151B_100%)]" />
-
-        {/* Decorative pattern for no-image state */}
-        {!hasImage && (
+      <div className="relative h-48 w-full shrink-0 overflow-hidden bg-[#2A2C35]">
+        {!hasImage ? (
+          <div className="absolute inset-0 bg-[#2A2C35]" />
+        ) : (
           <>
-            <div className="absolute inset-0 opacity-40 bg-[linear-gradient(rgba(255,255,255,0.04)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.04)_1px,transparent_1px)] bg-[size:22px_22px]" />
-            <div className="absolute inset-0 flex items-center justify-center">
-              <div className="flex h-14 w-14 items-center justify-center rounded-2xl border border-white/10 bg-white/[0.04] shadow-[0_10px_30px_rgba(0,0,0,0.18)] backdrop-blur-sm">
-                <Sparkles className="h-6 w-6 text-white/70" />
-              </div>
-            </div>
+            <Image
+              src={normalizedImageUrl}
+              alt={title}
+              fill
+              className="object-cover"
+              onError={() => setImageError(true)}
+              sizes="(max-width: 640px) 100vw, (max-width: 1280px) 50vw, 25vw"
+            />
+            <div className="absolute inset-0 bg-black/20" />
           </>
         )}
 
-        {/* Image */}
-        {hasImage && (
-          <Image
-            src={normalizedImageUrl}
-            alt={title}
-            fill
-            className="object-cover"
-            onError={() => setImageError(true)}
-            sizes="(max-width: 640px) 100vw, (max-width: 1280px) 50vw, 25vw"
-          />
-        )}
-
-        {/* Always-on dark treatment so bright images don't wash out header */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/25 to-black/15" />
-        <div className="absolute inset-0 bg-gradient-to-br from-[#0B1020]/20 via-transparent to-transparent" />
-
-        {/* Category badge */}
         {category && (
           <div className="absolute left-3 top-3 z-20">
             {CATEGORY_META[category]?.slug ? (
               <Link
                 href={`/ideas/category/${CATEGORY_META[category].slug}`}
                 onClick={(e) => e.stopPropagation()}
-                className="inline-flex items-center rounded-md border border-white/15 bg-black/35 px-2.5 py-1 text-xs font-medium text-white shadow-sm backdrop-blur-sm transition-colors hover:bg-black/50"
+                className="inline-flex items-center rounded-md bg-white/90 px-2.5 py-1 text-xs font-medium text-foreground shadow-sm border border-[#D9DCE3] hover:bg-white transition-colors"
               >
                 {category}
               </Link>
             ) : (
-              <span className="inline-flex items-center rounded-md border border-white/15 bg-black/35 px-2.5 py-1 text-xs font-medium text-white shadow-sm backdrop-blur-sm">
+              <span className="inline-flex items-center rounded-md bg-white/90 px-2.5 py-1 text-xs font-medium text-foreground shadow-sm border border-[#D9DCE3]">
                 {category}
               </span>
             )}
-          </div>
-        )}
-
-        {/* Lock overlay */}
-        {isLocked && (
-          <div className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-[#11131A]/35 backdrop-blur-[2px]">
-            <div className="flex h-12 w-12 items-center justify-center rounded-full border border-white/15 bg-black/40 shadow-xl">
-              <Lock className="h-5 w-5 text-white" strokeWidth={2.4} />
-            </div>
-            <span className="mt-3 rounded-full border border-white/10 bg-black/40 px-3 py-1 text-xs font-semibold tracking-wide text-white shadow-xl">
-              Locked Content
-            </span>
           </div>
         )}
       </div>
@@ -149,7 +119,7 @@ export function IdeaCard({
         <h3 className="line-clamp-2 text-lg font-bold leading-tight text-foreground">
           <Link
             href={`/ideas/${id}`}
-            className="transition-colors hover:text-primary focus:outline-none"
+            className="hover:text-primary transition-colors focus:outline-none"
           >
             {title}
           </Link>
@@ -174,7 +144,7 @@ export function IdeaCard({
                 {creatorId ? (
                   <Link
                     href={`/creators/${creatorId}`}
-                    className="text-xs text-muted-foreground transition-colors hover:text-primary"
+                    className="text-xs text-muted-foreground hover:text-primary transition-colors"
                   >
                     by {creatorName}
                   </Link>
@@ -196,7 +166,7 @@ export function IdeaCard({
               <Button
                 asChild
                 size="sm"
-                className="gap-1.5 bg-green-600 text-white hover:bg-green-700"
+                className="bg-green-600 hover:bg-green-700 text-white gap-1.5"
               >
                 <Link href={`/ideas/${id}`}>
                   <Unlock className="h-3.5 w-3.5" />
