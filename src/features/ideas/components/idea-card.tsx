@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
+import { useState } from "react";
 import { Lock, Unlock, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { BookmarkButton } from "@/features/bookmarks/components/bookmark-button";
@@ -27,9 +28,11 @@ export function IdeaCard({
   isAuthenticated = false,
 }: IdeaCardProps) {
   const isLocked = !isOwner && !isPurchased;
+  const [imageError, setImageError] = useState(false);
 
   // Strict check: only treat as valid if it's a real URL
   const hasImage =
+    !imageError &&
     typeof teaserImageUrl === "string" &&
     teaserImageUrl.length > 5 &&
     (teaserImageUrl.startsWith("http://") ||
@@ -41,22 +44,21 @@ export function IdeaCard({
       {/* Image Header Area */}
       <div className="relative h-48 w-full shrink-0 overflow-hidden bg-[#1A1B22]">
 
-        {/* Placeholder OR Actual Image */}
-        {hasImage ? (
+        {/* Always-present premium dark gradient base layer */}
+        <div className="absolute inset-0 bg-gradient-to-br from-[#1E1F25] via-[#2A2C35] to-[#1A1B22]" />
+
+        {/* Soft vignette */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
+
+        {/* Actual image rendered above the gradient when valid */}
+        {hasImage && (
           <Image
             src={teaserImageUrl!}
             alt={title}
             fill
             className="object-cover"
+            onError={() => setImageError(true)}
           />
-        ) : (
-          <>
-            {/* Premium dark gradient */}
-            <div className="absolute inset-0 bg-gradient-to-br from-[#1E1F25] via-[#2A2C35] to-[#1A1B22]" />
-
-            {/* Soft vignette */}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
-          </>
         )}
 
         {/* Lock Overlay */}
