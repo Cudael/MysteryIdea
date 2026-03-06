@@ -18,7 +18,7 @@ export default async function NewIdeaPage() {
       <div className="mb-8 border-b border-[#D9DCE3] pb-6">
         <h1 className="text-[28px] font-bold tracking-tight text-[#1A1A1A]">Create New Idea</h1>
         <p className="mt-2 text-[15px] leading-[1.6] text-[#1A1A1A]/60">
-          Draft your insight, set your terms, and prepare to monetize your expertise.
+          Share your insight, set your price, and start earning — no payout setup needed upfront.
         </p>
       </div>
 
