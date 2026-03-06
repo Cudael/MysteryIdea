@@ -28,10 +28,10 @@ export async function createIdea(input: z.infer<typeof createIdeaSchema>) {
     hiddenContent: sanitizeHtml(rest.hiddenContent),
   };
 
-  // Resolve subcategoryId from name if provided
+  // Resolve subcategoryId from slug if provided (slug has a unique index)
   let subcategoryId: string | undefined;
   if (subcategoryName) {
-    const subcat = await prisma.subcategory.findFirst({ where: { name: subcategoryName } });
+    const subcat = await prisma.subcategory.findUnique({ where: { slug: subcategoryName } });
     if (subcat) subcategoryId = subcat.id;
   }
 
@@ -84,12 +84,12 @@ export async function updateIdea(
     ...(input.hiddenContent !== undefined && { hiddenContent: sanitizeHtml(input.hiddenContent) }),
   };
 
-  // Resolve subcategoryId from name if provided
+  // Resolve subcategoryId from slug if provided (slug has a unique index)
   const { subcategory: subcategoryName, maturityLevel, ...restInput } = sanitizedInput;
   let subcategoryId: string | undefined | null;
   if (subcategoryName !== undefined) {
     if (subcategoryName) {
-      const subcat = await prisma.subcategory.findFirst({ where: { name: subcategoryName } });
+      const subcat = await prisma.subcategory.findUnique({ where: { slug: subcategoryName } });
       subcategoryId = subcat?.id ?? null;
     } else {
       subcategoryId = null;

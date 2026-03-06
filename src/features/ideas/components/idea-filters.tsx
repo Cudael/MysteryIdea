@@ -157,7 +157,7 @@ export function IdeaFilters() {
               >
                 <option value="">All Subcategories</option>
                 {availableSubcategories.map((sub) => (
-                  <option key={sub.slug} value={sub.name}>
+                  <option key={sub.slug} value={sub.slug}>
                     {sub.name}
                   </option>
                 ))}

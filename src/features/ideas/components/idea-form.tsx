@@ -144,7 +144,7 @@ export function IdeaForm({
             : null,
         category: category || undefined,
         subcategory: subcategory || undefined,
-        maturityLevel: maturityLevel as "SEED" | "CONCEPT" | "BLUEPRINT" | "PROTOTYPE_READY" | undefined || undefined,
+        maturityLevel: (maturityLevel || undefined) as "SEED" | "CONCEPT" | "BLUEPRINT" | "PROTOTYPE_READY" | undefined,
         tags,
         published: isCreateMode ? publishNow : undefined,
       });
@@ -543,7 +543,7 @@ export function IdeaForm({
             >
               <option value="">Select a subcategory...</option>
               {availableSubcategories.map((sub) => (
-                <option key={sub.slug} value={sub.name}>
+                <option key={sub.slug} value={sub.slug}>
                   {sub.name}
                 </option>
               ))}
