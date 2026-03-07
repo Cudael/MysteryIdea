@@ -16,6 +16,7 @@ import {
   Bell,
   Shield,
   PieChart,
+  ArrowLeftRight,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { getUnreadCount } from "@/features/notifications/actions";
@@ -41,18 +42,23 @@ const ACCOUNT_LINKS = [
   { href: "/settings", label: "Settings", icon: Settings, exact: false },
 ];
 
-function NavGroupLabel({ label }: { label: string }) {
-  return (
-    <p className="px-3.5 pb-1.5 pt-4 text-[10px] font-bold uppercase tracking-widest text-[#1A1A1A]/35 first:pt-2">
-      {label}
-    </p>
-  );
+type Workspace = "buyer" | "seller";
+
+function getWorkspaceFromPath(pathname: string): Workspace {
+  if (pathname.startsWith("/creator")) return "seller";
+  return "buyer";
 }
 
 export function DashboardSidebar() {
   const pathname = usePathname();
   const [unreadCount, setUnreadCount] = useState(0);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [activeWorkspace, setActiveWorkspace] = useState<Workspace>("buyer");
+
+  // Auto-switch workspace when navigating between buyer/seller routes
+  useEffect(() => {
+    setActiveWorkspace(getWorkspaceFromPath(pathname));
+  }, [pathname]);
 
   useEffect(() => {
     getIsAdmin()
@@ -75,11 +81,13 @@ export function DashboardSidebar() {
     label,
     icon: Icon,
     exact,
+    muted,
   }: {
     href: string;
     label: string;
     icon: React.ElementType;
     exact: boolean;
+    muted?: boolean;
   }) {
     const isActive = exact ? pathname === href : pathname.startsWith(href);
     const isNotifications = href === "/dashboard/notifications";
@@ -90,10 +98,17 @@ export function DashboardSidebar() {
           "flex items-center gap-3 rounded-[8px] px-3.5 py-2.5 text-[14px] font-medium transition-all duration-200",
           isActive
             ? "bg-[#3A5FCD]/10 text-[#3A5FCD]"
+            : muted
+            ? "text-[#1A1A1A]/40 hover:bg-[#FFFFFF] hover:text-[#1A1A1A]/70 hover:shadow-[0_2px_8px_rgba(0,0,0,0.02)]"
             : "text-[#1A1A1A]/70 hover:bg-[#FFFFFF] hover:text-[#1A1A1A] hover:shadow-[0_2px_8px_rgba(0,0,0,0.02)]"
         )}
       >
-        <Icon className={cn("h-4 w-4 shrink-0", isActive ? "text-[#3A5FCD]" : "text-[#1A1A1A]/50")} />
+        <Icon
+          className={cn(
+            "h-4 w-4 shrink-0",
+            isActive ? "text-[#3A5FCD]" : muted ? "text-[#1A1A1A]/30" : "text-[#1A1A1A]/50"
+          )}
+        />
         {label}
         {isNotifications && unreadCount > 0 && (
           <span className="ml-auto flex h-5 min-w-[20px] items-center justify-center rounded-full bg-red-500 px-1.5 text-[10px] font-bold text-white">
@@ -104,40 +119,98 @@ export function DashboardSidebar() {
     );
   }
 
+  const isBuyer = activeWorkspace === "buyer";
+
   return (
     <>
       {/* Desktop sidebar */}
       <aside className="hidden w-[260px] shrink-0 border-r border-[#D9DCE3] bg-[#F5F6FA]/50 md:flex md:flex-col">
-        <div className="flex h-[72px] items-center gap-3 border-b border-[#D9DCE3] px-6">
-          <div className="flex h-8 w-8 items-center justify-center rounded-[8px] bg-[#FFFFFF] border border-[#D9DCE3] shadow-[0_2px_4px_rgba(0,0,0,0.02)]">
-            <Lightbulb className="h-4 w-4 text-[#3A5FCD]" />
+        {/* Workspace switcher header */}
+        <div className="border-b border-[#D9DCE3] px-4 py-3">
+          <p className="mb-2 px-1.5 text-[10px] font-bold uppercase tracking-widest text-[#1A1A1A]/35">
+            Workspace
+          </p>
+          <div className="flex gap-1.5 rounded-[10px] bg-[#EBEBF0] p-1">
+            <button
+              onClick={() => setActiveWorkspace("buyer")}
+              className={cn(
+                "flex flex-1 items-center justify-center gap-2 rounded-[7px] px-3 py-2 text-[13px] font-semibold transition-all duration-200",
+                isBuyer
+                  ? "bg-[#FFFFFF] text-[#3A5FCD] shadow-[0_1px_4px_rgba(0,0,0,0.08)]"
+                  : "text-[#1A1A1A]/50 hover:text-[#1A1A1A]/70"
+              )}
+            >
+              <ShoppingBag className="h-3.5 w-3.5 shrink-0" />
+              Buyer
+            </button>
+            <button
+              onClick={() => setActiveWorkspace("seller")}
+              className={cn(
+                "flex flex-1 items-center justify-center gap-2 rounded-[7px] px-3 py-2 text-[13px] font-semibold transition-all duration-200",
+                !isBuyer
+                  ? "bg-[#FFFFFF] text-[#3A5FCD] shadow-[0_1px_4px_rgba(0,0,0,0.08)]"
+                  : "text-[#1A1A1A]/50 hover:text-[#1A1A1A]/70"
+              )}
+            >
+              <Lightbulb className="h-3.5 w-3.5 shrink-0" />
+              Seller
+            </button>
           </div>
-          <span className="text-[15px] font-bold tracking-tight text-[#1A1A1A]">
-            Dashboard
-          </span>
         </div>
 
         <nav className="flex flex-col px-4 py-2 flex-1 overflow-y-auto">
-          {/* Buyer section */}
-          <NavGroupLabel label="Buyer" />
-          <div className="flex flex-col gap-0.5">
-            {BUYER_LINKS.map((link) => (
-              <NavLink key={link.href} {...link} />
-            ))}
-          </div>
+          {/* Primary workspace links */}
+          {isBuyer ? (
+            <>
+              <p className="px-3.5 pb-1.5 pt-3 text-[10px] font-bold uppercase tracking-widest text-[#1A1A1A]/35">
+                Buyer
+              </p>
+              <div className="flex flex-col gap-0.5">
+                {BUYER_LINKS.map((link) => (
+                  <NavLink key={link.href} {...link} />
+                ))}
+              </div>
 
-          {/* Seller section */}
-          <div className="my-1 h-px bg-[#D9DCE3]" />
-          <NavGroupLabel label="Seller" />
-          <div className="flex flex-col gap-0.5">
-            {SELLER_LINKS.map((link) => (
-              <NavLink key={link.href} {...link} />
-            ))}
-          </div>
+              {/* Secondary workspace - muted */}
+              <div className="my-2 h-px bg-[#D9DCE3]" />
+              <p className="px-3.5 pb-1.5 pt-1 text-[10px] font-bold uppercase tracking-widest text-[#1A1A1A]/25">
+                Seller
+              </p>
+              <div className="flex flex-col gap-0.5">
+                {SELLER_LINKS.map((link) => (
+                  <NavLink key={link.href} {...link} muted />
+                ))}
+              </div>
+            </>
+          ) : (
+            <>
+              <p className="px-3.5 pb-1.5 pt-3 text-[10px] font-bold uppercase tracking-widest text-[#1A1A1A]/35">
+                Seller
+              </p>
+              <div className="flex flex-col gap-0.5">
+                {SELLER_LINKS.map((link) => (
+                  <NavLink key={link.href} {...link} />
+                ))}
+              </div>
+
+              {/* Secondary workspace - muted */}
+              <div className="my-2 h-px bg-[#D9DCE3]" />
+              <p className="px-3.5 pb-1.5 pt-1 text-[10px] font-bold uppercase tracking-widest text-[#1A1A1A]/25">
+                Buyer
+              </p>
+              <div className="flex flex-col gap-0.5">
+                {BUYER_LINKS.map((link) => (
+                  <NavLink key={link.href} {...link} muted />
+                ))}
+              </div>
+            </>
+          )}
 
           {/* Account section */}
-          <div className="my-1 h-px bg-[#D9DCE3]" />
-          <NavGroupLabel label="Account" />
+          <div className="my-2 h-px bg-[#D9DCE3]" />
+          <p className="px-3.5 pb-1.5 pt-1 text-[10px] font-bold uppercase tracking-widest text-[#1A1A1A]/35">
+            Account
+          </p>
           <div className="flex flex-col gap-0.5">
             {ACCOUNT_LINKS.map((link) => (
               <NavLink key={link.href} {...link} />
@@ -147,7 +220,7 @@ export function DashboardSidebar() {
           {/* Admin section */}
           {isAdmin && (
             <>
-              <div className="my-1 h-px bg-[#D9DCE3]" />
+              <div className="my-2 h-px bg-[#D9DCE3]" />
               <Link
                 href="/admin"
                 className={cn(
@@ -174,97 +247,106 @@ export function DashboardSidebar() {
       </aside>
 
       {/* Mobile horizontal nav */}
-      <div className="flex overflow-x-auto border-b border-[#D9DCE3] bg-[#FFFFFF] px-4 md:hidden no-scrollbar shadow-[0_2px_10px_rgba(0,0,0,0.02)]">
-        <div className="flex gap-2 py-3">
-          {/* Buyer links */}
-          {BUYER_LINKS.map(({ href, label, icon: Icon, exact }) => {
-            const isActive = exact ? pathname === href : pathname.startsWith(href);
-            const isNotifications = href === "/dashboard/notifications";
-            return (
-              <Link
-                key={href}
-                href={href}
-                className={cn(
-                  "flex shrink-0 items-center gap-2 rounded-[8px] px-4 py-2.5 text-[14px] font-medium transition-colors",
-                  isActive
-                    ? "bg-[#3A5FCD]/10 text-[#3A5FCD]"
-                    : "bg-[#F5F6FA] text-[#1A1A1A]/70 hover:bg-[#E8EBF2] hover:text-[#1A1A1A]"
-                )}
-              >
-                <Icon className="h-4 w-4" />
-                {label}
-                {isNotifications && unreadCount > 0 && (
-                  <span className="flex h-4 min-w-[16px] items-center justify-center rounded-full bg-red-500 px-1 text-[10px] font-bold text-white leading-none">
-                    {unreadCount > 99 ? "99+" : unreadCount}
-                  </span>
-                )}
-              </Link>
-            );
-          })}
-
-          {/* Divider pill */}
-          <div className="mx-1 my-auto h-5 w-px shrink-0 bg-[#D9DCE3]" />
-
-          {/* Seller links */}
-          {SELLER_LINKS.map(({ href, label, icon: Icon, exact }) => {
-            const isActive = exact ? pathname === href : pathname.startsWith(href);
-            return (
-              <Link
-                key={href}
-                href={href}
-                className={cn(
-                  "flex shrink-0 items-center gap-2 rounded-[8px] px-4 py-2.5 text-[14px] font-medium transition-colors",
-                  isActive
-                    ? "bg-[#3A5FCD]/10 text-[#3A5FCD]"
-                    : "bg-[#F5F6FA] text-[#1A1A1A]/70 hover:bg-[#E8EBF2] hover:text-[#1A1A1A]"
-                )}
-              >
-                <Icon className="h-4 w-4" />
-                {label}
-              </Link>
-            );
-          })}
-
-          {/* Divider pill */}
-          <div className="mx-1 my-auto h-5 w-px shrink-0 bg-[#D9DCE3]" />
-
-          {/* Account links */}
-          {ACCOUNT_LINKS.map(({ href, label, icon: Icon, exact }) => {
-            const isActive = exact ? pathname === href : pathname.startsWith(href);
-            return (
-              <Link
-                key={href}
-                href={href}
-                className={cn(
-                  "flex shrink-0 items-center gap-2 rounded-[8px] px-4 py-2.5 text-[14px] font-medium transition-colors",
-                  isActive
-                    ? "bg-[#3A5FCD]/10 text-[#3A5FCD]"
-                    : "bg-[#F5F6FA] text-[#1A1A1A]/70 hover:bg-[#E8EBF2] hover:text-[#1A1A1A]"
-                )}
-              >
-                <Icon className="h-4 w-4" />
-                {label}
-              </Link>
-            );
-          })}
-
-          {isAdmin && (
-            <Link
-              href="/admin"
+      <div className="flex flex-col border-b border-[#D9DCE3] bg-[#FFFFFF] md:hidden shadow-[0_2px_10px_rgba(0,0,0,0.02)]">
+        {/* Mobile workspace switcher */}
+        <div className="flex items-center gap-3 border-b border-[#D9DCE3] px-4 py-2.5">
+          <ArrowLeftRight className="h-3.5 w-3.5 shrink-0 text-[#1A1A1A]/40" />
+          <div className="flex gap-1.5 rounded-[8px] bg-[#F0F1F5] p-0.5">
+            <button
+              onClick={() => setActiveWorkspace("buyer")}
               className={cn(
-                "flex shrink-0 items-center gap-2 rounded-[8px] px-4 py-2.5 text-[14px] font-medium transition-colors",
-                pathname.startsWith("/admin")
-                  ? "bg-red-500/10 text-red-600"
-                  : "bg-[#F5F6FA] text-[#1A1A1A]/70 hover:bg-[#E8EBF2] hover:text-[#1A1A1A]"
+                "flex items-center gap-1.5 rounded-[6px] px-3 py-1.5 text-[12px] font-semibold transition-all duration-200",
+                isBuyer
+                  ? "bg-[#FFFFFF] text-[#3A5FCD] shadow-[0_1px_3px_rgba(0,0,0,0.08)]"
+                  : "text-[#1A1A1A]/50"
               )}
             >
-              <Shield className="h-4 w-4" />
-              Admin
-              <span className="flex h-4 min-w-[28px] items-center justify-center rounded-full bg-red-500 px-1 text-[10px] font-bold text-white leading-none">
-                ADMIN
-              </span>
-            </Link>
-          )}
+              <ShoppingBag className="h-3 w-3 shrink-0" />
+              Buyer
+            </button>
+            <button
+              onClick={() => setActiveWorkspace("seller")}
+              className={cn(
+                "flex items-center gap-1.5 rounded-[6px] px-3 py-1.5 text-[12px] font-semibold transition-all duration-200",
+                !isBuyer
+                  ? "bg-[#FFFFFF] text-[#3A5FCD] shadow-[0_1px_3px_rgba(0,0,0,0.08)]"
+                  : "text-[#1A1A1A]/50"
+              )}
+            >
+              <Lightbulb className="h-3 w-3 shrink-0" />
+              Seller
+            </button>
+          </div>
+        </div>
+
+        {/* Mobile nav links - show active workspace */}
+        <div className="overflow-x-auto no-scrollbar">
+          <div className="flex gap-2 px-4 py-3">
+            {(isBuyer ? BUYER_LINKS : SELLER_LINKS).map(({ href, label, icon: Icon, exact }) => {
+              const isActive = exact ? pathname === href : pathname.startsWith(href);
+              const isNotifications = href === "/dashboard/notifications";
+              return (
+                <Link
+                  key={href}
+                  href={href}
+                  className={cn(
+                    "flex shrink-0 items-center gap-2 rounded-[8px] px-4 py-2.5 text-[14px] font-medium transition-colors",
+                    isActive
+                      ? "bg-[#3A5FCD]/10 text-[#3A5FCD]"
+                      : "bg-[#F5F6FA] text-[#1A1A1A]/70 hover:bg-[#E8EBF2] hover:text-[#1A1A1A]"
+                  )}
+                >
+                  <Icon className="h-4 w-4" />
+                  {label}
+                  {isNotifications && unreadCount > 0 && (
+                    <span className="flex h-4 min-w-[16px] items-center justify-center rounded-full bg-red-500 px-1 text-[10px] font-bold text-white leading-none">
+                      {unreadCount > 99 ? "99+" : unreadCount}
+                    </span>
+                  )}
+                </Link>
+              );
+            })}
+
+            <div className="mx-1 my-auto h-5 w-px shrink-0 bg-[#D9DCE3]" />
+
+            {/* Account links always visible */}
+            {ACCOUNT_LINKS.map(({ href, label, icon: Icon, exact }) => {
+              const isActive = exact ? pathname === href : pathname.startsWith(href);
+              return (
+                <Link
+                  key={href}
+                  href={href}
+                  className={cn(
+                    "flex shrink-0 items-center gap-2 rounded-[8px] px-4 py-2.5 text-[14px] font-medium transition-colors",
+                    isActive
+                      ? "bg-[#3A5FCD]/10 text-[#3A5FCD]"
+                      : "bg-[#F5F6FA] text-[#1A1A1A]/70 hover:bg-[#E8EBF2] hover:text-[#1A1A1A]"
+                  )}
+                >
+                  <Icon className="h-4 w-4" />
+                  {label}
+                </Link>
+              );
+            })}
+
+            {isAdmin && (
+              <Link
+                href="/admin"
+                className={cn(
+                  "flex shrink-0 items-center gap-2 rounded-[8px] px-4 py-2.5 text-[14px] font-medium transition-colors",
+                  pathname.startsWith("/admin")
+                    ? "bg-red-500/10 text-red-600"
+                    : "bg-[#F5F6FA] text-[#1A1A1A]/70 hover:bg-[#E8EBF2] hover:text-[#1A1A1A]"
+                )}
+              >
+                <Shield className="h-4 w-4" />
+                Admin
+                <span className="flex h-4 min-w-[28px] items-center justify-center rounded-full bg-red-500 px-1 text-[10px] font-bold text-white leading-none">
+                  ADMIN
+                </span>
+              </Link>
+            )}
+          </div>
         </div>
       </div>
     </>
