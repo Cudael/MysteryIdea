@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
-import Link from "next/link";
 import {
   CheckCircle,
   XCircle,
@@ -12,6 +11,8 @@ import {
   AlertCircle,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Breadcrumbs } from "@/components/shared/breadcrumbs";
+import { PageHeader } from "@/components/shared/page-header";
 import {
   createConnectAccount,
   getConnectAccountStatus,
@@ -98,15 +99,19 @@ export default function ConnectPage() {
 
   return (
     <div className="mx-auto max-w-2xl animate-in fade-in slide-in-from-bottom-4 duration-500 pb-12">
-      
-      <div className="mb-8">
-        <h1 className="text-[28px] font-bold tracking-tight text-[#1A1A1A]">
-          Connect Your Stripe Account
-        </h1>
-        <p className="mt-2 text-[15px] leading-[1.6] text-[#1A1A1A]/60">
-          Connect a Stripe account to receive payouts directly from your idea sales. A 15% platform fee applies to each transaction.
-        </p>
-      </div>
+      <Breadcrumbs
+        items={[
+          { label: "Home", href: "/" },
+          { label: "Dashboard", href: "/dashboard" },
+          { label: "Creator Studio", href: "/creator" },
+          { label: "Stripe Connect" },
+        ]}
+      />
+      <PageHeader
+        title="Stripe Connect"
+        description="Connect a Stripe account to receive payouts directly from your idea sales. A 15% platform fee applies to each transaction."
+        icon={<CreditCard className="h-6 w-6 text-[#FFFFFF]" />}
+      />
 
       {successMessage && (
         <div className="mt-6 flex items-center gap-3 rounded-[8px] border border-[#C8E6C9] bg-[#E8F5E9] p-4 shadow-[0_2px_8px_rgba(0,0,0,0.02)]">
@@ -240,15 +245,6 @@ export default function ConnectPage() {
             </Button>
           </div>
         )}
-      </div>
-
-      <div className="mt-8">
-        <Link
-          href="/creator"
-          className="text-[14px] font-medium text-[#1A1A1A]/60 hover:text-[#3A5FCD] transition-colors flex items-center gap-1"
-        >
-          &larr; Back to Creator Studio
-        </Link>
       </div>
     </div>
   );
