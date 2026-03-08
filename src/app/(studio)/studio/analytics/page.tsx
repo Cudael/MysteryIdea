@@ -14,7 +14,6 @@ import { RevenueChart } from "@/features/analytics/components/revenue-chart";
 import { TopIdeasTable } from "@/features/analytics/components/top-ideas-table";
 import { RecentSales } from "@/features/analytics/components/recent-sales";
 import { PayoutInfo } from "@/features/analytics/components/payout-info";
-import { Breadcrumbs } from "@/components/shared/breadcrumbs";
 import { PageHeader } from "@/components/shared/page-header";
 import { StatCard } from "@/components/shared/stat-card";
 import { DashboardCard } from "@/components/shared/dashboard-card";
@@ -78,14 +77,6 @@ export default async function StudioAnalyticsPage() {
 
   return (
     <div className="mx-auto max-w-6xl animate-in fade-in slide-in-from-bottom-4 space-y-8 pb-12 duration-500">
-      <Breadcrumbs
-        items={[
-          { label: "Home", href: "/" },
-          { label: "Creator Studio", href: "/studio" },
-          { label: "Analytics" },
-        ]}
-      />
-
       <PageHeader
         title="Analytics"
         description="Review revenue trends, buyer feedback, and how your ideas are performing over time."

@@ -4,7 +4,6 @@ import { redirect, notFound } from "next/navigation";
 import { Pencil, AlertCircle } from "lucide-react";
 import { IdeaForm } from "@/features/ideas/components/idea-form";
 import { DeleteIdeaDialog } from "@/features/ideas/components/delete-idea-dialog";
-import { Breadcrumbs } from "@/components/shared/breadcrumbs";
 import { PageHeader } from "@/components/shared/page-header";
 import { DashboardCard } from "@/components/shared/dashboard-card";
 import { getIdeaById, updateIdea } from "@/features/ideas/actions";
@@ -33,14 +32,6 @@ export default async function EditIdeaPage({
 
   return (
     <div className="mx-auto max-w-4xl animate-in fade-in slide-in-from-bottom-4 space-y-8 pb-12 duration-500">
-      <Breadcrumbs
-        items={[
-          { label: "Home", href: "/" },
-          { label: "Creator Studio", href: "/studio" },
-          { label: "Edit Idea" },
-        ]}
-      />
-
       <PageHeader
         title="Edit Idea"
         description="Refine your teaser, pricing, content, and publishing setup."

@@ -7,7 +7,6 @@ import { getWalletWithTransactions } from "@/features/wallet/actions";
 import { getConnectAccountStatus } from "@/features/stripe/actions";
 import { WalletBalance } from "@/features/wallet/components/wallet-balance";
 import { WalletTransactions } from "@/features/wallet/components/wallet-transactions";
-import { Breadcrumbs } from "@/components/shared/breadcrumbs";
 import { PageHeader } from "@/components/shared/page-header";
 import { DashboardCard } from "@/components/shared/dashboard-card";
 import { Button } from "@/components/ui/button";
@@ -29,14 +28,6 @@ export default async function StudioWalletPage() {
 
   return (
     <div className="mx-auto max-w-5xl animate-in fade-in slide-in-from-bottom-4 space-y-8 pb-12 duration-500">
-      <Breadcrumbs
-        items={[
-          { label: "Home", href: "/" },
-          { label: "Creator Studio", href: "/studio" },
-          { label: "Wallet" },
-        ]}
-      />
-
       <PageHeader
         title="Wallet"
         description="Track your creator balance, understand earnings activity, and review recent transactions."

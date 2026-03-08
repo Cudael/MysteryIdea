@@ -1,5 +1,5 @@
 import { Navbar } from "@/components/layout/navbar";
-import { DashboardSidebar } from "@/components/layout/dashboard-sidebar";
+import { StudioSidebar } from "@/components/layout/studio-sidebar";
 
 export const dynamic = "force-dynamic";
 
@@ -13,7 +13,7 @@ export default function StudioLayout({
       <Navbar />
 
       <div className="flex flex-1 flex-col md:flex-row">
-        <DashboardSidebar />
+        <StudioSidebar />
 
         <main className="min-w-0 flex-1 overflow-x-hidden px-4 py-6 md:px-8 md:py-8 lg:px-10 lg:py-10">
           <div className="mx-auto w-full max-w-6xl">

@@ -3,7 +3,6 @@ import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import { Lightbulb, Sparkles } from "lucide-react";
 import { IdeaForm } from "@/features/ideas/components/idea-form";
-import { Breadcrumbs } from "@/components/shared/breadcrumbs";
 import { PageHeader } from "@/components/shared/page-header";
 import { DashboardCard } from "@/components/shared/dashboard-card";
 import { createIdea } from "@/features/ideas/actions";
@@ -18,14 +17,6 @@ export default async function NewIdeaPage() {
 
   return (
     <div className="mx-auto max-w-4xl animate-in fade-in slide-in-from-bottom-4 space-y-8 pb-12 duration-500">
-      <Breadcrumbs
-        items={[
-          { label: "Home", href: "/" },
-          { label: "Creator Studio", href: "/studio" },
-          { label: "New Idea" },
-        ]}
-      />
-
       <PageHeader
         title="Create New Idea"
         description="Share your insight, set your price, and publish when you're ready. Payout setup can be completed later."
