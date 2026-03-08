@@ -18,7 +18,7 @@ import {
 import { cn } from "@/lib/utils";
 import { getIsAdmin } from "@/features/admin/actions";
 
-const CREATOR_LINKS = [
+const STUDIO_LINKS = [
   { href: "/studio", label: "Overview", icon: LayoutDashboard, exact: true },
   { href: "/studio/analytics", label: "Analytics", icon: BarChart3, exact: false },
   { href: "/studio/wallet", label: "Wallet", icon: Wallet2, exact: false },
@@ -30,7 +30,7 @@ const ACCOUNT_LINKS = [
   { href: "/account", label: "Account", icon: Settings, exact: false },
 ];
 
-export function DashboardSidebar() {
+export function StudioSidebar() {
   const pathname = usePathname();
 
   const [isAdmin, setIsAdmin] = useState(false);
@@ -106,11 +106,11 @@ export function DashboardSidebar() {
 
         <nav className="flex flex-1 flex-col overflow-y-auto px-4 py-3">
           <p className="px-3.5 pb-1.5 pt-1 text-[10px] font-bold uppercase tracking-[0.14em] text-[#1A1A1A]/35">
-            Creator
+            Studio
           </p>
 
           <div className="flex flex-col gap-1">
-            {CREATOR_LINKS.map((link) => (
+            {STUDIO_LINKS.map((link) => (
               <NavLink key={link.href} {...link} />
             ))}
           </div>
@@ -171,7 +171,7 @@ export function DashboardSidebar() {
       <div className="flex flex-col border-b border-[#D9DCE3] bg-[#FFFFFF] md:hidden shadow-[0_2px_10px_rgba(0,0,0,0.02)]">
         <div className="overflow-x-auto no-scrollbar">
           <div className="flex gap-2 px-4 py-3">
-            {CREATOR_LINKS.map(({ href, label, icon: Icon, exact }) => {
+            {STUDIO_LINKS.map(({ href, label, icon: Icon, exact }) => {
               const isActive = exact ? pathname === href : pathname.startsWith(href);
 
               return (
@@ -236,4 +236,3 @@ export function DashboardSidebar() {
     </>
   );
 }
-

@@ -16,7 +16,6 @@ import {
 import { Button } from "@/components/ui/button";
 import { DeleteIdeaDialog } from "@/features/ideas/components/delete-idea-dialog";
 import { CreatorPublishToggle } from "@/features/ideas/components/creator-publish-toggle";
-import { Breadcrumbs } from "@/components/shared/breadcrumbs";
 import { PageHeader } from "@/components/shared/page-header";
 import { StatCard } from "@/components/shared/stat-card";
 import { DashboardCard } from "@/components/shared/dashboard-card";
@@ -78,13 +77,6 @@ export default async function StudioPage() {
 
   return (
     <div className="mx-auto max-w-6xl animate-in fade-in slide-in-from-bottom-4 space-y-8 pb-12 duration-500">
-      <Breadcrumbs
-        items={[
-          { label: "Home", href: "/" },
-          { label: "Creator Studio" },
-        ]}
-      />
-
       <PageHeader
         title="Creator Studio"
         description="Manage your ideas, monitor performance, and keep your earnings organized."

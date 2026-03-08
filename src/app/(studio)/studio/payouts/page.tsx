@@ -13,7 +13,6 @@ import {
   ShieldCheck,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Breadcrumbs } from "@/components/shared/breadcrumbs";
 import { PageHeader } from "@/components/shared/page-header";
 import { DashboardCard } from "@/components/shared/dashboard-card";
 import {
@@ -140,14 +139,6 @@ export default function PayoutsPage() {
 
   return (
     <div className="mx-auto max-w-5xl animate-in fade-in slide-in-from-bottom-4 space-y-8 pb-12 duration-500">
-      <Breadcrumbs
-        items={[
-          { label: "Home", href: "/" },
-          { label: "Creator Studio", href: "/studio" },
-          { label: "Payouts" },
-        ]}
-      />
-
       <PageHeader
         title="Payout Settings"
         description="Connect Stripe to receive payouts, monitor account status, and keep payment capabilities active."
