@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight, ShieldCheck, Sparkles, Users } from "lucide-react";
+import { ArrowRight, LockOpen, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export function Hero() {
@@ -13,18 +13,16 @@ export function Hero() {
           <div className="max-w-3xl">
             <div className="inline-flex items-center gap-2 rounded-full border border-[#D9DCE3] bg-white px-4 py-2 text-sm font-medium text-[#1A1A1A]/70 shadow-[0_2px_10px_rgba(0,0,0,0.03)]">
               <Sparkles className="h-4 w-4 text-[#3A5FCD]" />
-              Premium idea marketplace for serious buyers and creators
+              Premium Marketplace
             </div>
 
             <h1 className="mt-6 text-[42px] font-bold tracking-[-0.03em] text-[#111827] sm:text-[56px] sm:leading-[1.02]">
-              Buy and sell
-              <span className="text-[#3A5FCD]"> high-value ideas </span>
-              with clarity, exclusivity, and trust.
+              Buy and sell{" "}
+              <span className="text-[#3A5FCD]">high-value ideas</span>
             </h1>
 
             <p className="mt-6 max-w-2xl text-[18px] leading-8 text-[#1A1A1A]/68 sm:text-[20px]">
-              MysteryMarket helps experts monetize hard-won insights while giving buyers
-              access to premium opportunities, frameworks, and concepts they won’t find in public feeds.
+              Unlock exclusive business insights or monetize your own expertise in a secure, premium marketplace designed for forward-thinkers.
             </p>
 
             <div className="mt-10 flex flex-col gap-4 sm:flex-row">
@@ -38,62 +36,53 @@ export function Hero() {
                 <Link href="/sign-up">Start selling</Link>
               </Button>
             </div>
-
-            <div className="mt-10 inline-flex flex-wrap items-center gap-4 rounded-2xl border border-[#D9DCE3]/60 bg-white/50 px-5 py-4 text-sm text-[#1A1A1A]/70 shadow-sm sm:flex-nowrap sm:gap-6">
-              <div className="flex items-center gap-2 font-medium">
-                <ShieldCheck className="h-4 w-4 text-[#3A5FCD]" />
-                Secure payments
-              </div>
-              <div className="hidden h-4 w-px bg-[#D9DCE3] sm:block" />
-              <div className="flex items-center gap-2 font-medium">
-                <Users className="h-4 w-4 text-[#3A5FCD]" />
-                Pro community
-              </div>
-              <div className="hidden h-4 w-px bg-[#D9DCE3] sm:block" />
-              <div className="flex items-center gap-2 font-medium">
-                <Sparkles className="h-4 w-4 text-[#3A5FCD]" />
-                Curated quality
-              </div>
-            </div>
           </div>
 
           <div className="relative">
             <div className="absolute -right-8 -top-8 -z-10 h-64 w-64 rounded-full bg-[#3A5FCD]/10 blur-3xl" />
             <div className="absolute -bottom-8 -left-8 -z-10 h-64 w-64 rounded-full bg-[#E8C26A]/10 blur-3xl" />
-            
+
             <div className="rounded-[24px] border border-[#D9DCE3] border-t-[6px] border-t-[#3A5FCD] bg-white p-6 shadow-[0_24px_80px_rgba(17,24,39,0.08)]">
-              <div className="rounded-[18px] border border-[#E6EAF2] bg-[#F8F9FC] p-5">
-                <div className="flex items-center justify-between">
-                  <span className="rounded-full bg-[#3A5FCD]/10 px-3 py-1 text-xs font-semibold text-[#3A5FCD]">
-                    Featured insight
+              <div className="overflow-hidden rounded-[18px] border border-[#E6EAF2] bg-[#F8F9FC]">
+                <div className="relative h-48 w-full overflow-hidden">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuDdGX7NC4IklMBCw7h7LW8-dmEpZyIWK6DANo1n0nVZqIn40XG6VFlxTIGLeBcFshs4X3j8_kuk-My0HY_F7kfvjxZ9yU3yzJyR_MIkp-LAhYMMJBT58sxqyBeCKFZMMZEuVQfggvp5WZ6POU7_sinx1Su3LO5iSuI_ZwrcXsHwmEgwdxxzQN-YYYOFouC841X6V3nT3plRG9oKrLdLYxpcod8w07Ahub-z2Wi2Tgu6WXwed5yMKPm7N1zHBRC-hPtLSPP_RcpB22c"
+                    alt="The Next-Gen Micro-SaaS for Remote Teams"
+                    className="h-full w-full object-cover"
+                  />
+                  <span className="absolute right-3 top-3 rounded-full bg-[#3A5FCD]/10 px-3 py-1 text-xs font-semibold text-[#3A5FCD] backdrop-blur-sm">
+                    Exclusive
                   </span>
-                  <span className="text-sm font-medium text-[#1A1A1A]/45">Exclusive</span>
                 </div>
 
-                <h3 className="mt-5 text-xl font-semibold text-[#111827]">
-                  Undervalued B2B workflow ideas hidden in niche service markets
-                </h3>
-                <p className="mt-3 text-sm leading-6 text-[#1A1A1A]/65">
-                  A premium concept with buyer-ready angles, monetization logic, and positioning opportunities.
-                </p>
-
-                <div className="mt-6 rounded-[14px] border border-dashed border-[#C8D2EA] bg-white p-4">
-                  <p className="text-sm font-medium text-[#1A1A1A]/70">Teaser preview</p>
-                  <div className="mt-3 space-y-2">
-                    <div className="h-2 rounded bg-[#E8ECF5]" />
-                    <div className="h-2 w-11/12 rounded bg-[#E8ECF5]" />
-                    <div className="h-2 w-9/12 rounded bg-[#E8ECF5]" />
+                <div className="p-5">
+                  <div className="mb-4 flex items-center gap-3">
+                    <div className="flex h-9 w-9 items-center justify-center rounded-full bg-[#3A5FCD]/10 text-sm font-bold text-[#3A5FCD]">
+                      E
+                    </div>
+                    <div>
+                      <p className="text-sm font-semibold text-[#111827]">Elena R.</p>
+                      <p className="text-xs text-[#1A1A1A]/45">Top Creator</p>
+                    </div>
                   </div>
-                </div>
 
-                <div className="mt-6 flex items-center justify-between border-t border-[#E6EAF2] pt-4">
-                  <div>
-                    <p className="text-xs uppercase tracking-[0.18em] text-[#1A1A1A]/40">Price</p>
-                    <p className="mt-1 text-lg font-semibold text-[#111827]">$49.00</p>
-                  </div>
-                  <div>
-                    <p className="text-xs uppercase tracking-[0.18em] text-[#1A1A1A]/40">Unlocks</p>
-                    <p className="mt-1 text-lg font-semibold text-[#111827]">128</p>
+                  <h3 className="text-xl font-semibold text-[#111827]">
+                    The Next-Gen Micro-SaaS for Remote Teams
+                  </h3>
+                  <p className="mt-2 text-sm leading-6 text-[#1A1A1A]/65">
+                    A fully validated concept with initial wireframes and market research for a unique remote collaboration tool.
+                  </p>
+
+                  <div className="mt-5 flex items-center justify-between border-t border-[#E6EAF2] pt-4">
+                    <div>
+                      <p className="text-xs uppercase tracking-[0.18em] text-[#1A1A1A]/40">Unlock Price</p>
+                      <p className="mt-1 text-lg font-semibold text-[#111827]">$2,500</p>
+                    </div>
+                    <Button size="sm" className="rounded-[8px] bg-[#3A5FCD] text-[13px] font-semibold hover:bg-[#2D4FB0]">
+                      <LockOpen className="mr-1.5 h-3.5 w-3.5" />
+                      Unlock Now
+                    </Button>
                   </div>
                 </div>
               </div>
