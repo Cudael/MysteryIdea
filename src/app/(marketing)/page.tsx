@@ -48,21 +48,21 @@ const HOW_IT_WORKS = [
   {
     step: "01",
     icon: Search,
-    title: "Discover hidden teasers",
+    title: "Discover Hidden Teasers",
     description:
       "Every listing shows just enough to spark curiosity. Browse by category, price, or topic — without seeing the full idea first.",
   },
   {
     step: "02",
     icon: Lock,
-    title: "Unlock what calls to you",
+    title: "Unlock What Calls to You",
     description:
       "Pay once to reveal the full idea instantly. No subscriptions, no guesswork — just direct access to what you want.",
   },
   {
     step: "03",
     icon: Wallet,
-    title: "Yours forever, theirs earned",
+    title: "Yours Forever, Theirs Earned",
     description:
       "You keep permanent access. Creators earn for their thinking. Everyone wins when good ideas find the right people.",
   },
