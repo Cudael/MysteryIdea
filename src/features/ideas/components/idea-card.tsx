@@ -62,16 +62,16 @@ export function IdeaCard({
     "flex items-center gap-1 rounded-full px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wide backdrop-blur-sm",
     unlockType === "EXCLUSIVE"
       ? "bg-violet-600/80 text-white"
-      : "bg-zinc-700/80 text-zinc-200"
+      : "bg-zinc-200/90 text-zinc-600"
   );
 
   return (
     <div
       className={cn(
-        "group flex flex-col rounded-2xl border border-zinc-200 dark:border-zinc-800",
-        "bg-white dark:bg-zinc-900",
-        "shadow-[inset_0_0_0_1px_rgba(0,0,0,0.04)]",
-        "transition-all duration-200 hover:shadow-md hover:-translate-y-0.5"
+        "group flex flex-col rounded-2xl border border-zinc-200",
+        "bg-white",
+        "shadow-sm",
+        "transition-all duration-200 hover:shadow-violet-100/60 hover:shadow-lg hover:-translate-y-0.5"
       )}
     >
       {/* Image area */}
@@ -88,9 +88,9 @@ export function IdeaCard({
             <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
           </>
         ) : (
-          <div className="flex h-full items-center justify-center bg-gradient-to-br from-violet-50 to-indigo-50 dark:from-violet-950/30 dark:to-indigo-950/30">
-            <div className="flex h-14 w-14 items-center justify-center rounded-full bg-white/70 dark:bg-zinc-800/70">
-              <Lightbulb className="h-7 w-7 text-violet-400 dark:text-violet-300" />
+          <div className="flex h-full items-center justify-center bg-gradient-to-br from-violet-50 to-indigo-50">
+            <div className="flex h-14 w-14 items-center justify-center rounded-full bg-white/70">
+              <Lightbulb className="h-7 w-7 text-violet-400" />
             </div>
           </div>
         )}
@@ -114,12 +114,12 @@ export function IdeaCard({
               <Link
                 href={`/ideas/category/${categorySlug}`}
                 onClick={(e) => e.stopPropagation()}
-                className="flex items-center rounded-full bg-white/80 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wide text-zinc-700 backdrop-blur-sm dark:bg-zinc-800/80 dark:text-zinc-200 hover:bg-white dark:hover:bg-zinc-700"
+                className="flex items-center rounded-full bg-white/80 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wide text-zinc-700 backdrop-blur-sm hover:bg-white"
               >
                 {category}
               </Link>
             ) : (
-              <span className="flex items-center rounded-full bg-white/80 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wide text-zinc-700 backdrop-blur-sm dark:bg-zinc-800/80 dark:text-zinc-200">
+              <span className="flex items-center rounded-full bg-white/80 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wide text-zinc-700 backdrop-blur-sm">
                 {category}
               </span>
             )
@@ -133,7 +133,7 @@ export function IdeaCard({
         <div className="flex items-start justify-between gap-2">
           <Link
             href={`/ideas/${id}`}
-            className="flex-1 font-bold text-base leading-snug line-clamp-2 text-zinc-900 dark:text-white hover:text-violet-600 dark:hover:text-violet-400"
+            className="flex-1 font-bold text-base leading-snug line-clamp-2 text-zinc-900 hover:text-violet-600"
           >
             <span>{title}</span>
           </Link>
@@ -158,12 +158,12 @@ export function IdeaCard({
                 <AvatarImage src={normalizedCreatorAvatarUrl ?? undefined} />
                 <AvatarFallback className="text-[9px]">{creatorInitials}</AvatarFallback>
               </Avatar>
-              <span className="truncate text-xs text-zinc-500 dark:text-zinc-400 hover:text-violet-600 dark:hover:text-violet-400">
+              <span className="truncate text-xs text-zinc-500 hover:text-violet-600">
                 {creatorName ?? "Creator"}
               </span>
             </Link>
             {typeof purchaseCount === "number" && (
-              <span className="flex items-center gap-1 text-xs text-zinc-400 dark:text-zinc-500 shrink-0">
+              <span className="flex items-center gap-1 text-xs text-zinc-400 shrink-0">
                 <Users className="h-3.5 w-3.5" />
                 {purchaseCount}
               </span>
@@ -184,10 +184,10 @@ export function IdeaCard({
             <span aria-label={`Rating: ${averageRating.toFixed(1)} out of 5 stars`}>
               <Star className="h-3.5 w-3.5 fill-amber-400 text-amber-400" />
             </span>
-            <span className="text-xs font-medium text-zinc-700 dark:text-zinc-300">
+            <span className="text-xs font-medium text-zinc-700">
               {averageRating.toFixed(1)}
             </span>
-            <span className="text-xs text-zinc-400 dark:text-zinc-500">
+            <span className="text-xs text-zinc-400">
               ({reviewCount})
             </span>
           </div>
@@ -197,8 +197,8 @@ export function IdeaCard({
         <div className="flex-1" />
 
         {/* Footer */}
-        <div className="mt-4 flex items-center justify-between border-t border-zinc-100 dark:border-zinc-800 pt-4">
-          <span className="text-xl font-bold text-zinc-900 dark:text-white">
+        <div className="mt-4 flex items-center justify-between border-t border-zinc-100 pt-4">
+          <span className="text-xl font-bold text-zinc-900">
             {formatPrice(priceInCents)}
           </span>
           {isOwner ? (
