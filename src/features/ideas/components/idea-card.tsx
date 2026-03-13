@@ -98,16 +98,12 @@ export function IdeaCard({
         {/* Lock overlay for unpurchased ideas */}
         {!isPurchased && !isOwner && (
           <div
-            className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center"
-            style={{
-              backdropFilter: "blur(8px) grayscale(30%)",
-              background: "rgba(255, 255, 255, 0.45)",
-            }}
+            className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center backdrop-blur-md grayscale-[30%] bg-white/40"
           >
             <div className="mb-2 flex h-11 w-11 items-center justify-center rounded-full bg-white/90 shadow-sm border border-violet-100">
               <Lock className="h-5 w-5 text-violet-500" />
             </div>
-            <span className="text-[10px] font-bold uppercase tracking-widest text-slate-500">
+            <span className="text-[10px] font-bold uppercase tracking-widest text-slate-800 drop-shadow-sm">
               Preview Only
             </span>
           </div>
